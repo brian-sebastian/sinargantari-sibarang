@@ -57,7 +57,7 @@ _Untuk Melakukan Instalasi Project ini Ikuti Langkah Berikut._
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/Ardhacodes/sibarang.git
+   git clone https://github.com/brian-sebastian/sinargantari-sibarang
    ```
 2. Copy .env.example menjadi .env
 3. Konfigurasi .env environment & database app
