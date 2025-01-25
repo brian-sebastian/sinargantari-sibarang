@@ -60,6 +60,7 @@ class Import_gudang extends CI_Controller{
             }
 
             if (!empty($fileBarang)) {
+                set_time_limit(300000);
 
                 if ($fileBarang['size'] > 5000000) {
                     // 5 Mb maximum Mb -> Byte

@@ -41,6 +41,7 @@ class Barang_toko extends CI_Controller
 
         $data['title_menu'] = "Barang";
         $data['title']      = "Barang Toko";
+        $data['subtitle']   = "Barang Toko";
         $data['toko']       = $this->toko->ambilSemuaToko();
 
         if ($this->session->userdata('toko_id')) {
