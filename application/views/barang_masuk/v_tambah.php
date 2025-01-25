@@ -50,7 +50,7 @@
                         <!-- tipe antar toko -->
                         <div id="form-barangmasuk-toko" style="display: none;">
                             <div class="row mb-3" id="dari_toko">
-                                <label class="col-sm-2 col-form-label" for="dari_toko">Dari Gudang</label>
+                                <label class="col-sm-2 col-form-label" for="dari_toko">Dari Toko</label>
                                 <div class="col-sm-10">
                                     <input class="form-control" type="text" name="dari_toko" id="dari_toko" value="<?= $toko_name['nama_toko'] ?>" readonly>
                                     <?= form_error('dari_toko', '<small class="text-danger">', '</small>') ?>
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="row mb-3" id="ke_toko">
-                                <label class="col-sm-2 col-form-label" for="basic-default-name">Ke Toko</label>
+                                <label class="col-sm-2 col-form-label" for="basic-default-name">Ke Toko Atau Gudang</label>
                                 <div class="col-sm-10">
                                     <select class="form-control select2 " name="ke_toko" id="ke_toko" style="width: 100%;">
                                         <option value="">-- Pilih --</option>
@@ -134,6 +134,11 @@
                                 <div class="col-sm-10">
                                     <select class="form-control select2 " name="harga_id_barang_gudang_supplier" id="harga_id_barang_gudang_supplier" style="width: 100%;">
                                         <option value="">-- Pilih --</option>
+                                        <?php if($this->session->userdata('toko_id')) : ?>
+                                            <?php foreach($barangtoko_current as $barang_toko) : ?>
+                                                <option value="<?= $barang_toko['id_harga']?>"><?= $barang_toko['nama_barang']?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                     <?= form_error('harga_id_barang_gudang_supplier', '<small class="text-danger">', '</small>') ?>
                                 </div>
@@ -289,7 +294,7 @@
                 // let allGudang = <?//= $gudangTokoAll ?>;
                 let allToko = <?= $tokoAll ?>;
                 let idTk = <?= $idToko ? $idToko : 0 ?>;
-
+                
                 $.each(allSupplier, function(index, supplier) {
                     let option = $('<option>').val(supplier.id_supplier).text(supplier.nama_supplier);
                     $('#supplier').append(option);
@@ -323,6 +328,7 @@
 
                 $('#gudangsupplierlist').on('change', function() {
                     let selectedGudang = $(this).val();
+                
                     let BASE_URL_HARGAIDGUDANG = '<?= base_url() ?>'
                     $.ajax({
                         url: BASE_URL_HARGAIDGUDANG + 'barang/masuk/getDataBarangHargaAjax',
