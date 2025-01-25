@@ -53,7 +53,7 @@ class Import_gudang extends CI_Controller{
         }else{
 
             $fileBarang = $_FILES['file_barang'];
-
+            
             if ($fileBarang['name'] == "" || $fileBarang['error'] == 4 || ($fileBarang['size'] == 0 && $fileBarang['error'] == 0)) {
                 $this->session->set_flashdata('gagal', 'Tidak Ada File yang diupload');
                 redirect('gudang/import_gudang/data_baru');

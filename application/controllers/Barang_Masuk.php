@@ -280,7 +280,7 @@ class Barang_Masuk extends CI_Controller
                 $this->view['gudangtoko'] = $this->Toko_model->getGudangToko();
                 $this->view['toko_semua'] = $this->Toko_model->ambilSemuaToko();
                 $this->view['barangtoko_current'] = $this->Harga_model->ambilBarangBerdasarkanToko($currentTokoId);
-
+                
                 $this->load->view('layout/header', $this->view);
                 $this->load->view('layout/sidebar', $this->view);
                 $this->load->view('layout/navbar', $this->view);
