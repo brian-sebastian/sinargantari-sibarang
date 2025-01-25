@@ -1,14 +1,11 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://ardhacodes.com">
-    <img src="https://event.smam1ta.sch.id/assets/images/arcodes.png" alt="Logo" width="80" height="80">
-  </a>
 
-  <h3 align="center">ARDHAPOS - SIBARANG</h3>
+  <h3 align="center">SIBARANG</h3>
 
   <p align="center">
-    Welcome To ArdhaPOS - SIBARANG
+     Welcome To SIBARANG
     <br />
     Project ini memuat tentang Point Of Sales Penjualan baik marketplace maupun secara offline
   </p>
@@ -20,7 +17,7 @@
 
 <img width="1426" alt="sibarang_resource" src="https://github.com/Ardhacodes/sibarang/assets/49335873/c587255d-3da4-4c49-babb-d6ef159e6127">
 
-Ini Adalah Sibara Product - ArdhaPOS
+Ini Adalah Sibara Product
 
 ### Built With
 
@@ -60,7 +57,7 @@ _Untuk Melakukan Instalasi Project ini Ikuti Langkah Berikut._
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/Ardhacodes/sibarang.git
+   git clone https://github.com/brian-sebastian/sinargantari-sibarang
    ```
 2. Copy .env.example menjadi .env
 3. Konfigurasi .env environment & database app
@@ -94,4 +91,4 @@ Ramadhan Setiabudi - ramadanhufazd@gmail.com
 <br>
 
 Project Link Marketplace: [https://marketplace.ardhacodes.com/](https://marketplace.ardhacodes.com/)
-Project Link Sibara: [https://sibara.ardhacodes.com/](https://sibara.ardhacodes.com/)
+Project Link Sibara: [https://sinargantari.com/](https://sinargantari.com/)
