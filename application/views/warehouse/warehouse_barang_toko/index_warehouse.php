@@ -62,7 +62,9 @@
                                 <th>Barang</th>
                                 <th>Kategori</th>
                                 <th>Stock</th>
-                                <th>Harga jual</th>
+                                <?php if($gudang_tampilan) : ?>
+                                    <th>Harga jual</th>
+                                <?php endif; ?>
                                 <th>Berat Barang</th>
                                 <th>Barcode Barang</th>
                             </tr>

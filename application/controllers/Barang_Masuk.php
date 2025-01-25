@@ -28,16 +28,14 @@ class Barang_Masuk extends CI_Controller
     }
     public function index()
     {
-        // $role_id = $this->session->userdata('role_id');
-        // $supplier_tampil = (in_array($role_id, [1,2,6]));
+        $role_id = $this->session->userdata('role_id');
+        $supplier_tampil = (in_array($role_id, [1,2,6]));
         
-        // $toko_id = $this->session->userdata('toko_id');
-        // var_dump($toko_id);
-        // die;
-
+       
         $this->view['title_menu']   = "Barang";
         $this->view['title']        = "Barang Masuk";
         $this->view['content']      = "barang_masuk/v_barang_masuk_index";
+        $this->view['supplier_tampil']  = $supplier_tampil;
         $this->view['barang_masuk'] = $this->Barang_masuk_model->getAllBarangMasuk();
         $this->view['toko']         = $this->Toko_model->ambilSemuaToko();
 
@@ -46,15 +44,17 @@ class Barang_Masuk extends CI_Controller
 
     public function ajax_barang_masuk()
     {
-        // $role_id = $this->session->userdata('role_id');
-        // $supplier_tampilan = (in_array($role_id, [1,2,6]));
+        $role_id = $this->session->userdata('role_id');
+        $supplier_tampilan = (in_array($role_id, [1,2,6]));
       
 
         $toko_id = $this->input->post('toko_id');
         $enkripsi_toko_id = $this->secure->encrypt_url($toko_id);
-
+  
         $newArr = [];
         $data = $this->Barang_masuk_model->getAllBarangMasuk();
+
+        
 
         $hitungTotalBarangMasuk = $this->Barang_masuk_model->ambilHitungTotalBarangMasuk();
         $filterTotalBarangMasuk = $this->Barang_masuk_model->ambilFilterTotalBarangMasuk();
@@ -78,8 +78,10 @@ class Barang_Masuk extends CI_Controller
             $row[] = $d['jml_masuk'];
             $row[] = "<img src='" . base_url('assets/file_barang_masuk/') . $d['bukti_beli'] . "' width='50' height='50'>";
             $row[] = $val;
-            $row[] = $d['nama_supplier'];
-            $row[] = $d['no_telpon_supplier'];
+            if($supplier_tampilan){
+                $row[] = $d['nama_supplier'];
+                $row[] = $d['no_telpon_supplier'];
+            }
             $row[] = date('d M Y', strtotime($d['tanggal_barang_masuk']));
             $row[] = "<a class='btn btn-danger btn-sm' href='" . base_url('barang/masuk/hapus/') . base64_encode($d['id_barang_masuk'])  . "?toko=$enkripsi_toko_id" . "' onclick='return confirm('Apakah ingin menghapus" . $d['nama_toko'] . "')' ><i class='bx bx-trash me-1'></i> Delete</a>";
 
