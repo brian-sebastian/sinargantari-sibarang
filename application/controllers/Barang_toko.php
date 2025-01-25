@@ -49,13 +49,21 @@ class Barang_toko extends CI_Controller
             
             $tokoku = $this->db->where("id_toko", $toko_id)->get("tbl_toko")->row_array();
 
-            $data['title']      = "Barang Toko ".$tokoku["nama_toko"];
+            $data['subtitle']      = "Barang Toko ".$tokoku["nama_toko"];
 
             // $data['admin_toko_id']          = $role_id;
             $data['toko_id']          = $toko_id;
             $data['harga_barang']     = $this->barang->getBarangHargaToko($toko_id);
             $data['harga_temp']       = $this->harga->ambilBarangTemp($toko_id)->num_rows();
             $data['kategori_barang']  = $this->kategori->ambilSemuaKategori();
+
+            $id_category = $this->input->post('category');
+
+            if($id_category){
+                $data['kategori_id'] = $id_category;
+            }else{
+                $data['kategori_id'] = '';
+            }
         } else {
             if ($this->input->get('toko')) {
 
@@ -64,8 +72,8 @@ class Barang_toko extends CI_Controller
                 $decrypt_id             = $this->secure->decrypt_url($id_toko);
                 
                 $tokoku = $this->db->where("id_toko", $decrypt_id)->get("tbl_toko")->row_array();
-                
-                $data['title']      = "Barang Toko ".$tokoku["nama_toko"];
+
+                $data['subtitle']      = "Barang Toko ".$tokoku["nama_toko"];
                 
                 // $data['admin_toko_id']          = $role_id;
                 $data["data_toko"]      = $this->toko->ambilDetailToko($decrypt_id);
@@ -74,8 +82,7 @@ class Barang_toko extends CI_Controller
                 $data['toko_id']        = $decrypt_id;
                 $data['kategori_barang'] = $this->kategori->ambilSemuaKategori();
                 
-                 $id_category = $this->input->post('category');
-               
+                $id_category = $this->input->post('category');
 
                 if($id_category){
                     $data['kategori_id'] = $id_category;
@@ -115,6 +122,9 @@ class Barang_toko extends CI_Controller
         $toko_id = $this->input->post("toko_id");
         $enkripsi_toko_id = $this->secure->encrypt_url($toko_id);
         $kategori_id = $this->input->post('kategori_id');
+
+        // var_dump($kategori_id);
+        // die();
         
         $data = $this->barang->ambilSemuaBarangToko($toko_id, $kategori_id);
         $hitungBarangToko = $this->barang->ambilHitungBarangToko($toko_id);
@@ -125,6 +135,9 @@ class Barang_toko extends CI_Controller
 
         foreach ($data as $d) {
             // $harga_pokok = (!in_array($role_id, [18, 21]));
+
+            // var_dump($this->session->userdata('role_id'));
+            // die();
 
             $stok_tersedia = $d['stok_toko'] + $d['stok_gudang'];
 
@@ -138,9 +151,11 @@ class Barang_toko extends CI_Controller
             $col[]  = ($d["barcode_barang"] == null) ? "<a class='btn btn-info btn-sm' href='" . base_url('barang/create_barcode/') . $d['kode_barang'] . "'>Create Barcode</a>" : "<img src='" . base_url('assets/barcodes/') . $d['barcode_barang'] . '.png' . "' alt='' srcset=''>";
             $col[]  = $d["nama_barang"];
             $col[]  = $d["nama_kategori"];
-            // if($harga_pokok){
+
+            if ($this->session->userdata('role_id') == 2 || $this->session->userdata('role_id') == 1) {
                 $col[]  = "Rp" . number_format($d['harga_pokok']);
-            // }
+            }
+
             $col[]  = "Rp" . number_format($d['harga_jual']);
             $col[] = $d['stok_toko'];
             $col[] = (!empty($d['stok_gudang'])) ? $d['stok_gudang'] : 0;
@@ -158,10 +173,21 @@ class Barang_toko extends CI_Controller
                         $contentDisable =  " <button class='btn btn-sm btn-danger re-removes-again' data-id='" . base64_encode($d["id_harga"]) . "' data-idreq='" . base64_encode($resultCheckRejectedOrAccepted['data']['id_request']) . "' data-bs-toggle='modal' data-bs-target='#remove_again_from_rejected'><span class='tf-icons bx bx-trash'></span>&nbsp; Request Hapus Lagi</button> ";
                     }
                 }
-                $col[11] .= $contentDisable;
+
+                if ($this->session->userdata('role_id') == 2 || $this->session->userdata('role_id') == 1) {
+                    $col[11] .= $contentDisable;
+                } else {
+                    $col[10] .= $contentDisable;
+                }
+
             } else {
                 $contentButton =  " <button class='btn btn-sm btn-danger removes' data-id='" . base64_encode($d["id_harga"]) . "' data-bs-toggle='modal' data-bs-target='#remove_modal'><span class='tf-icons bx bx-trash'></span>&nbsp; Hapus</button>";
-                $col[11] .= $contentButton;
+
+                if ($this->session->userdata('role_id') == 2 || $this->session->userdata('role_id') == 1) {
+                    $col[11] .= $contentButton;
+                } else {
+                    $col[10] .= $contentButton;
+                }
             }
 
             array_push($row, $col);

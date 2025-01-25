@@ -1,5 +1,5 @@
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"><?= $title_menu ?> /</span> <?= $title ?></h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"><?= $title_menu ?> /</span> <?= $subtitle ?></h4>
 
     <?php if ($this->session->flashdata('message')) : ?>
         <div class="alert alert-success alert-dismissible" role="alert">
@@ -66,7 +66,11 @@
                                 <th>Barcode Barang</th>
                                 <th>Barang</th>
                                 <th>Kategori</th>
+
+                                <?php if ($this->session->userdata('role_id') == 1 || $this->session->userdata('role_id') == 2) { ?>
                                 <th>Harga Pokok</th>
+                                <?php } ?>
+
                                 <th>Harga Toko</th>
                                 <th>Stok Toko</th>
                                 <th>Stok Gudang</th>
