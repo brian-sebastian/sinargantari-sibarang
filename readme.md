@@ -57,7 +57,7 @@ _Untuk Melakukan Instalasi Project ini Ikuti Langkah Berikut._
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/Ardhacodes/sibarang.git
+   git clone https://github.com/brian-sebastian/sinargantari-sibarang
    ```
 2. Copy .env.example menjadi .env
 3. Konfigurasi .env environment & database app
@@ -91,4 +91,4 @@ Ramadhan Setiabudi - ramadanhufazd@gmail.com
 <br>
 
 Project Link Marketplace: [https://marketplace.ardhacodes.com/](https://marketplace.ardhacodes.com/)
-Project Link Sibara: [https://sibara.ardhacodes.com/](https://sibara.ardhacodes.com/)
+Project Link Sibara: [https://sinargantari.com/](https://sinargantari.com/)

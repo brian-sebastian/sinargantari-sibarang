@@ -44,6 +44,10 @@ class Warehouse extends CI_Controller
         $data['toko']       = $this->toko->ambilSemuaToko();
         $data['kategori']   = $this->kategori->ambilSemuaKategori();
 
+        $role_gudang = $this->session->userdata('role_id');
+        $gudang_tampilan = !in_array($role_gudang, [22]);
+        $data['gudang_tampilan'] = $gudang_tampilan;
+
         if ($this->session->userdata('toko_id')) {
 
             $toko_id                  = $this->session->userdata('toko_id');
@@ -90,6 +94,8 @@ class Warehouse extends CI_Controller
         $toko_id = $this->input->post("toko_id");
         $kategori_id = $this->input->post("kategori_id");
         $enkripsi_toko_id = $this->secure->encrypt_url($toko_id);
+        $role_gudang = $this->session->userdata('role_id');
+        $gudang_tampilan = !in_array($role_gudang, [22]);
 
         $data = $this->barang->ambilSemuaBarangToko($toko_id, $kategori_id);
         $hitungBarangToko = $this->barang->ambilHitungBarangToko($toko_id, $kategori_id);
@@ -108,7 +114,9 @@ class Warehouse extends CI_Controller
             $col[]  = $d["nama_barang"];
             $col[]  = $d["nama_kategori"];
             $col[]  = $d['stok_toko'];
-            $col[]  = "Rp " . number_format($d['harga_jual'], 0, ".", ".");
+            if($gudang_tampilan){
+                $col[]  = "Rp " . number_format($d['harga_jual'], 0, ".", ".");
+            }
             $col[]  = $d['berat_barang'] . " " . $d['satuan'];
             $col[]  = ($d["barcode_barang"] == null) ? "<a class='btn btn-info btn-sm' href='" . base_url('barang/create_barcode/') . $d['kode_barang'] . "'>Create Barcode</a>" : "<img src='" . base_url('assets/barcodes/') . $d['barcode_barang'] . '.png' . "' alt='' srcset=''>";
 

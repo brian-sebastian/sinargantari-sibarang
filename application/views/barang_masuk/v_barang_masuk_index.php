@@ -124,8 +124,10 @@
                                     <th>Jumlah Masuk</th>
                                     <th>Bukti Beli</th>
                                     <th>Tipe</th>
-                                    <th>Nama Supplier</th>
-                                    <th>Nomor Supplier</th>
+                                    <?php if($supplier_tampil) : ?>
+                                        <th>Nama Supplier</th>
+                                        <th>Nomor Supplier</th>
+                                    <?php endif; ?>
                                     <th>Tanggal Beli</th>
                                     <th>Action</th>
                                 </tr>
