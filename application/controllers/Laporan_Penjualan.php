@@ -43,6 +43,9 @@ class Laporan_Penjualan extends CI_Controller
         $hitungTotalPenjualan = $this->Laporan_penjualan_model->ambilHitungTotalPenjualan();
         $filterTotalPenjualan = $this->Laporan_penjualan_model->ambilFilterTotalPenjualan();
 
+        $role_admin_toko = $this->session->userdata('role_id');
+        $admin_toko = !in_array($role_admin_toko, [18, 22]);
+
         $no = 1;
         foreach ($data as $d) {
             $row = [];
@@ -51,11 +54,15 @@ class Laporan_Penjualan extends CI_Controller
             $row[] = $d['tanggal_beli'];
             $row[] = $d['kode_transaksi'];
             $row[] = $d['nama_barang'];
-            $row[] = ($this->session->userdata("role_id") == 18) ? "-" : number_format($d['harga_satuan_pokok']);
+            if($admin_toko) {
+                $row[] = ($this->session->userdata("role_id") == 18) ? "-" : number_format($d['harga_satuan_pokok']);
+            }
             // $row[] = ($this->session->userdata("role_id") == 2) ? "-" : number_format($d['harga_satuan_jual']);
             $row[] = number_format($d['harga_satuan_jual']);
             $row[] = $d['qty'];
-            $row[] = ($this->session->userdata("role_id") == 18) ? "-" : number_format($d['total_harga_pokok']);
+            if($admin_toko){
+                $row[] = ($this->session->userdata("role_id") == 18) ? "-" : number_format($d['total_harga_pokok']);
+            } 
             // $row[] = ($this->session->userdata("role_id") == 2) ? "-" : number_format($d['total_harga_jual']);
             $row[] = number_format($d['total_harga_jual']);
             // temporary
@@ -95,10 +102,14 @@ class Laporan_Penjualan extends CI_Controller
         $data = $this->Laporan_penjualan_model->ambilSemuaPenjualanExcel($getField["tanggal"], $getField["barang_id"], $getField["toko_id"]);
         $minMaxDate = $this->Laporan_penjualan_model->ambilMinMaxDate();
 
+        $role_admin_toko = $this->session->userdata('role_id');
+        $admin_toko = !in_array($role_admin_toko, [18, 22]);
+
         $libary_excel = [
             'func' => 'export',
             'jenis' => 'laporan_penjualan',
             'filename' => 'laporan_penjualan_' . date('Y_m_d_His') . ".xlsx",
+            'sess_admin_toko' => $admin_toko,
             'data_penjualan' => $data,
             'rangeTanggal' => ($getField['tanggal'] == '') ? $minMaxDate["minDate"] . ' to ' . $minMaxDate["maxDate"] : $getField['tanggal'],
         ];

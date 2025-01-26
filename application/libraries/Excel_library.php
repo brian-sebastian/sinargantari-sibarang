@@ -1061,6 +1061,7 @@ class Excel_library
                 break;
 
             case "laporan_penjualan":
+               
 
                 $activeWorksheet->mergeCells("B1:K1");
                 $activeWorksheet->mergeCells("B2:K2");
@@ -1090,10 +1091,14 @@ class Excel_library
                 $activeWorksheet->setCellValue("D5", "Kode order");
                 $activeWorksheet->setCellValue("E5", "Kode transaksi");
                 $activeWorksheet->setCellValue("F5", "Nama barang");
-                $activeWorksheet->setCellValue("G5", "Harga satuan pokok");
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->setCellValue("G5", "Harga satuan pokok");
+                }
                 $activeWorksheet->setCellValue("H5", "Harga satuan jual");
                 $activeWorksheet->setCellValue("I5", "Qty");
-                $activeWorksheet->setCellValue("J5", "Total harga pokok");
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->setCellValue("J5", "Total harga pokok");
+                }
                 $activeWorksheet->setCellValue("K5", "Total harga jual");
                 $activeWorksheet->setCellValue("L5", "Total diskon");
                 $activeWorksheet->setCellValue("M5", "Total keuntungan");
@@ -1117,10 +1122,14 @@ class Excel_library
                     $activeWorksheet->setCellValue("D$cell", $d["kode_order"]);
                     $activeWorksheet->setCellValue("E$cell", $d["kode_transaksi"]);
                     $activeWorksheet->setCellValue("F$cell", $d["nama_barang"]);
-                    $activeWorksheet->setCellValue("G$cell", $d["harga_satuan_pokok"]);
+                    if($data['sess_admin_toko']){
+                        $activeWorksheet->setCellValue("G$cell", $d["harga_satuan_pokok"]);
+                    }
                     $activeWorksheet->setCellValue("H$cell", $d["harga_satuan_jual"]);
                     $activeWorksheet->setCellValue("I$cell", $d["qty"]);
-                    $activeWorksheet->setCellValue("J$cell", $d["total_harga_pokok"]);
+                    if($data['sess_admin_toko']){
+                        $activeWorksheet->setCellValue("J$cell", $d["total_harga_pokok"]);
+                    }
                     $activeWorksheet->setCellValue("K$cell", $d["total_harga_jual"]);
                     $activeWorksheet->setCellValue("L$cell", $d["total_diskon"]);
                     $activeWorksheet->setCellValue("M$cell", $d["total_keuntungan"]);
@@ -1134,9 +1143,13 @@ class Excel_library
                     $cell++;
                 }
 
-                $activeWorksheet->getStyle("G$first_cell:G$cell")->getNumberFormat()->setFormatCode('#,##0');
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->getStyle("G$first_cell:G$cell")->getNumberFormat()->setFormatCode('#,##0');
+                }
                 $activeWorksheet->getStyle("H$first_cell:H$cell")->getNumberFormat()->setFormatCode('#,##0');
-                $activeWorksheet->getStyle("J$first_cell:J$cell")->getNumberFormat()->setFormatCode('#,##0');
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->getStyle("J$first_cell:J$cell")->getNumberFormat()->setFormatCode('#,##0');
+                }
                 $activeWorksheet->getStyle("K$first_cell:K$cell")->getNumberFormat()->setFormatCode('#,##0');
                 $activeWorksheet->getStyle("L$first_cell:L$cell")->getNumberFormat()->setFormatCode('#,##0');
                 $activeWorksheet->getStyle("M$first_cell:M$cell")->getNumberFormat()->setFormatCode('#,##0');

@@ -70,6 +70,10 @@
                         </div>
                     </div>
                 </div>
+                <?php 
+                    $role_admin_toko = $this->session->userdata('role_id');
+                    $admin_toko = !in_array($role_admin_toko, [18, 22]);
+                ?>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap py-2 px-2">
                         <table class="table table-striped dt-responsive nowrap py-1 px-1" id="dynamicTable">
@@ -80,10 +84,14 @@
                                     <th>Tanggal beli</th>
                                     <th>Kode transaksi</th>
                                     <th>Nama barang</th>
-                                    <th>Harga satuan pokok</th>
+                                    <?php if($admin_toko) : ?>
+                                        <th>Harga satuan pokok</th>
+                                    <?php endif; ?>
                                     <th>Harga satuan jual</th>
                                     <th>Qty</th>
-                                    <th>Total harga pokok</th>
+                                    <?php if($admin_toko) : ?>
+                                        <th>Total harga pokok</th>
+                                    <?php endif; ?>
                                     <th>Total harga jual</th>
                                     <th>Total diskon</th>
                                     <th>Total keuntungan</th>
