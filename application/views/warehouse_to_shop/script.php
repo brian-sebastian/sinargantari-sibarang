@@ -47,20 +47,47 @@
                             if (response.status) {
                                 let barangList = response.data;
                                 let htmlContent = '';
-
+                                // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                                // $('#daftarTableBarangToko thead').html(`
+                                //     <tr>
+                                //         <th>No</th>
+                                //         <th>Nama Barang</th>
+                                //         <th>Qty Barang Toko</th>
+                                //         <th>Jml Pindah Gudang</th>
+                                //         <th>Harga Jual</th>
+                                //         <th>Pilih</th>
+                                //     </tr>
+                                // `);
                                 $('#daftarTableBarangToko thead').html(`
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Barang</th>
                                         <th>Qty Barang Toko</th>
                                         <th>Jml Pindah Gudang</th>
-                                        <th>Harga Jual</th>
                                         <th>Pilih</th>
                                     </tr>
                                 `);
 
 
                                 $.each(barangList, function(index, barang) {
+                                // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                                //     htmlContent += `
+                                // <tr>
+                                //     <td>${index + 1}</td>
+                                //     <td>${barang.nama_barang}</td>
+                                //     <td>${barang.stok_toko}</td>
+                                //     <td>
+                                //         <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
+                                //     </td>
+                                //     <td>
+                                //         <input type="number" class="form-control harga_jual" data-id="${barang.id_barang}" value="0" min="0" />
+                                //     </td>
+                                //     <td>
+                                //         <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
+                                //         <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
+
+                                //     </td>
+                                // </tr>`;
                                     htmlContent += `
                                 <tr>
                                     <td>${index + 1}</td>
@@ -70,15 +97,11 @@
                                         <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control harga_jual" data-id="${barang.id_barang}" value="0" min="0" />
-                                    </td>
-                                    <td>
                                         <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
                                         <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
 
                                     </td>
-                                </tr>
-                            `;
+                                </tr>`;
                                 });
 
                                 $('#daftarTableBarangToko tbody').html(htmlContent);
@@ -131,7 +154,8 @@
                 var id_barang = $(this).val();
                 var tgl_beli = $(this).closest('tr').find('.tgl_beli').val();
                 var qty_pindah = $(this).closest('tr').find('.qty_pindah').val();
-                var harga_jual = $(this).closest('tr').find('.harga_jual').val();
+                // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                // var harga_jual = $(this).closest('tr').find('.harga_jual').val();
                 var stok_toko = $(this).closest('tr').find('td').eq(3).text(); // Mengambil stok toko dari kolom
                 var id_harga = $(this).closest('tr').find('.id_harga').val();
 
@@ -139,7 +163,8 @@
                 barangData.push({
                     id_barang: id_barang,
                     qty_pindah: qty_pindah,
-                    harga_jual: harga_jual,
+                    // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                    // harga_jual: harga_jual,
                     tgl_beli: tgl_beli,
                     gudang_id: gudang_id,
                     toko_id: toko_id,

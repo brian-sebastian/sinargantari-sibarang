@@ -217,6 +217,8 @@ class Gudang_model extends CI_Model{
 
                     }
 
+                    
+
                     $this->db->set("harga_id", $harga_id);
                     $this->db->set("jml_masuk", $data["jumlah_barang"]);
                     $this->db->set("tipe", "import_gudang");

@@ -1567,6 +1567,74 @@ class Excel_library
                 $activeWorksheet->getColumnDimension($readonlyColumn)->setVisible(false);
 
                 break;
+            
+            case "barang_gudang":
+
+                $activeWorksheet->mergeCells("A1:D1");
+                $activeWorksheet->setCellValue("A1", "LIST BARANG TOKO " . strtoupper($data["data_barang_toko"][0]["nama_toko"]));
+                $activeWorksheet->mergeCells("A2:D2");
+                $activeWorksheet->setCellValue("A2", "Tanggal Cetak : " . date("d-m-Y"));
+                $activeWorksheet->setCellValue("A3", "NO");
+                $activeWorksheet->setCellValue("B3", "KODE BARANG");
+                $activeWorksheet->setCellValue("C3", "NAMA BARANG");
+                $activeWorksheet->setCellValue("D3", "KATEGORI");
+                $activeWorksheet->setCellValue("E3", "STOK GUDANG");
+                $activeWorksheet->setCellValue("F3", "KODE BARCODE");
+                $activeWorksheet->setCellValue("G3", "GAMBAR BARCODE");
+    
+                // $barcodeFont = 'Free 3 of 9'; 
+    
+                $cell = 4;
+                $no = 1;
+                foreach ($data["data_barang_toko"] as $d) {
+    
+                    $barcodesss = $d["barcode_barang"];
+                        
+                    $stok_tersedia = $d['stok_toko'] + $d['stok_gudang'];
+    
+                    // $formattedBarcode = "*$barcodesss*";
+    
+                    $path_barcode = FCPATH . "assets/barcodes/" . $barcodesss . ".png";
+    
+                    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                    $drawing->setName('Barcode');
+                    $drawing->setDescription('Barcode for ' . $barcodesss);
+                    $drawing->setPath($path_barcode); // Path gambar barcode
+                    $drawing->setCoordinates("G$cell");
+                    $drawing->setHeight(60); // Atur tinggi gambar
+                    $drawing->setWorksheet($activeWorksheet);
+    
+                    $activeWorksheet->getRowDimension($cell)->setRowHeight(60); // Tinggi baris 70
+    
+                    $activeWorksheet->setCellValue("A$cell", $no);
+                    $activeWorksheet->setCellValue("B$cell", $d["kode_barang"]);
+                    $activeWorksheet->setCellValue("C$cell", $d["nama_barang"]);
+                    $activeWorksheet->setCellValue("D$cell", $d["nama_kategori"]);
+                    $activeWorksheet->setCellValue("E$cell", (!empty($d['stok_gudang'])) ? $d['stok_gudang'] : 0);
+                    $activeWorksheet->setCellValue("F$cell", "'" . $d["barcode_barang"]);
+                    // $activeWorksheet->setCellValue("G$cell", $formattedBarcode);
+                    // $activeWorksheet->setCellValue("H$cell", $d["id_harga"]);
+    
+                    // $activeWorksheet->getStyle("H$cell")->getFont()
+                    //     ->setName($barcodeFont) // Nama font
+                    //     ->setSize(20);         // Ukuran font
+    
+                    $cell++;
+                    $no++;
+                }
+    
+                $readonlyColumn = "J";
+                $activeWorksheet->getStyle($readonlyColumn . '4:' . $readonlyColumn . $cell)->getProtection()->setLocked(true);
+                $activeWorksheet->getProtection()->setSheet(true);
+    
+                $activeWorksheet->getStyle("A1:G1")->applyFromArray($styleArray1);
+                $activeWorksheet->getStyle("A2:G2")->applyFromArray($styleArray1);
+                $activeWorksheet->getStyle("A3:G3")->applyFromArray($styleArray);
+                $activeWorksheet->getStyle("A3:G3")->applyFromArray($styleArray1);
+                $activeWorksheet->getColumnDimension($readonlyColumn)->setCollapsed(true);
+                $activeWorksheet->getColumnDimension($readonlyColumn)->setVisible(false);
+    
+            break;
         }
 
         $this->export = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($this->spreadsheet);

@@ -109,9 +109,15 @@
     <div class="row d-none" id="row-table">
         <div class="col-xl">
             <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <button type="button" id="add_idtoko" class="btn btn-primary btn-sm"><span class="tf-icons bx bxs-plus-circle"></span>&nbsp; Tambah</button>
-                </div>
+                <?php 
+                    $admin_gudang = $this->session->userdata('role_id');
+                    $role_admin_gudang = !in_array($admin_gudang, [22]);
+                ?>
+                <?php if($role_admin_gudang) : ?>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <button type="button" id="add_idtoko" class="btn btn-primary btn-sm"><span class="tf-icons bx bxs-plus-circle"></span>&nbsp; Tambah</button>
+                    </div>
+                <?php endif; ?>
                 <div class="card-body">
                     <div class="table-responsive text-nowrap py-2 px-2">
                         <table class="table table-striped dt-responsive nowrap datatables py-1 px-1 w-100" id="dynamicTable">
