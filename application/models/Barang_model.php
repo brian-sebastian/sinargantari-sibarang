@@ -546,6 +546,8 @@ class Barang_model extends CI_Model
             }
         }
 
+        
+
         // $cari           = ["tbl_barang.nama_barang", "tbl_toko.nama_toko", "tbl_kategori.nama_kategori", "tbl_satuan.satuan"];
 
         // $this->db->select(
@@ -593,11 +595,12 @@ class Barang_model extends CI_Model
     public function ambilSemuaBarangToko($toko_id, $kategori_id = "")
     {
         $this->ajaxGetAllBarangToko($toko_id, $kategori_id);
-
+      
         if ($this->input->post('length') != -1) {
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         }
 
+       
         return $this->db->get()->result_array();
     }
 

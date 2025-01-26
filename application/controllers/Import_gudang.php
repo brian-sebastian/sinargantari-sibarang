@@ -24,7 +24,7 @@ class Import_gudang extends CI_Controller{
     public function simpan_data_baru(){
 
         $result = $this->gudang->processCreateDataBarangGudangBaru();
-
+        
         if($result === true){
 
             $this->session->set_flashdata('berhasil', "Data berhasil di simpan");

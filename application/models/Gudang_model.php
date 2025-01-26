@@ -162,18 +162,18 @@ class Gudang_model extends CI_Model{
     public function processCreateDataBarangGudangBaru(){
 
         $query = $this->db->get("tbl_import_gudang_baru");
-
+      
         if($query->num_rows()){
 
             $this->db->where_not_in("status", ["valid"]);
             $query2 = $this->db->get("tbl_import_gudang_baru");
-
+           
             if(!$query2->num_rows()){
 
                 $this->db->trans_begin();
 
                 $datas = $query->result_array();
-
+               
                 foreach($datas as $data){
 
                     $this->db->where("LOWER(nama_toko)", strtolower($data["nama_gudang"]));
@@ -182,11 +182,13 @@ class Gudang_model extends CI_Model{
 
                     $this->db->where("LOWER(nama_barang)", strtolower($data["nama_barang"]));
                     $barang_id = $this->db->get("tbl_barang")->row_array()["id_barang"];
+                  
 
                     $this->db->where("barang_id", $barang_id);
                     $this->db->where("toko_id", $toko_id);
                     $query = $this->db->get("tbl_harga");
                     
+
                     if(!$query->num_rows()){
 
                         // buat harga id baru
@@ -194,6 +196,7 @@ class Gudang_model extends CI_Model{
                         $this->db->set("toko_id", $toko_id);
                         $this->db->set("stok_toko", $data["jumlah_barang"]);
                         $this->db->set("harga_jual", 0);
+                        // $this->db->set("is_active", 1);
                         $this->db->set("is_active", 0);
                         $this->db->set("user_input", $this->session->userdata("username"));
                         $this->db->set("created_at", date("Y-m-d H:i:s"));

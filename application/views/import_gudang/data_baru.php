@@ -28,7 +28,7 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-sm btn-success">Import</button>
-                                <a href="<?= site_url('gudang/import_gudang/simpan_data_baru') ?>" class="btn btn-sm btn-danger">Simpan Hasil Import</a>
+                                <a href="<?= site_url('gudang/import_gudang/simpan_data_baru') ?>" class="btn btn-sm btn-danger">Simpan Hasil Import Ke Gudang</a>
                                 <a href="<?= site_url('assets/file_format_import/format_barang_toko_gudang_import.xlsx') ?>" class="btn btn-sm btn-primary" download>Download Template</a>
                             </div>
                             <small class="text-danger text-bold">* Perhatikan jika barang yang di import sudah ada di gudang sebelumnya, maka jumlah yang akan di import otomatis ditambahkan dengan stok yang ada pada gudang saat ini.</small>

@@ -663,7 +663,7 @@ class Excel_library
 
             case "barang_gudang_baru":
 
-                if (count($result[0]) < 5 || count($result[0]) > 5) {
+                if (count($result[0]) < 4 || count($result[0]) > 4) {
 
                     $this->CI->session->set_flashdata('gagal', 'Kolom tidak sesuai');
                     redirect('gudang/import_gudang/data_baru', 'refresh');
@@ -677,10 +677,10 @@ class Excel_library
 
                         $row = [];
 
-                        $row["nama_barang"] = $r[1];
-                        $row["nama_gudang"] = $r[2];
-                        $row["jumlah_barang"] = $r[3];
-                        $row["nama_toko_luar"] = $r[4];
+                        $row["nama_barang"] = $r[0];
+                        $row["nama_gudang"] = $r[1];
+                        $row["jumlah_barang"] = $r[2];
+                        $row["nama_toko_luar"] = $r[3];
 
                         array_push($new_arrs, $row);
                     }
