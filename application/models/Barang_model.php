@@ -509,7 +509,7 @@ class Barang_model extends CI_Model
         $this->db->select(
             'tbl_barang.id_barang, tbl_barang.kategori_id, tbl_barang.satuan_id, tbl_barang.kode_barang, tbl_barang.nama_barang, tbl_barang.slug_barang, tbl_barang.barcode_barang, tbl_barang.harga_pokok, tbl_barang.berat_barang, tbl_barang.deskripsi, tbl_barang.gambar, tbl_barang.is_active,
             tbl_toko.id_toko, tbl_toko.nama_toko, tbl_toko.alamat_toko, tbl_toko.notelp_toko, tbl_toko.jenis,
-            tbl_harga.id_harga, tbl_harga.barang_id, tbl_harga.toko_id, tbl_harga.stok_toko, tbl_harga.harga_jual, tbl_harga.is_active, tbl_kategori.nama_kategori, tbl_satuan.satuan, tbl_barang.barcode_barang, (select SUM(stok_toko) from tbl_harga as tbl_harga_subquery inner join tbl_toko as tbl_toko_subquery on tbl_harga_subquery.toko_id = tbl_toko.id_toko where tbl_harga_subquery.barang_id = tbl_harga.barang_id and tbl_harga_subquery.is_active = 0 and tbl_toko_subquery.jenis = "GUDANG") as stok_gudang, 
+            tbl_harga.id_harga, tbl_harga.barang_id, tbl_harga.toko_id, tbl_harga.stok_toko, tbl_harga.harga_jual, tbl_harga.is_active, tbl_kategori.nama_kategori, tbl_satuan.satuan, tbl_barang.barcode_barang, (select SUM(stok_toko) from tbl_harga as tbl_harga_subquery inner join tbl_toko as tbl_toko_subquery on tbl_harga_subquery.toko_id = tbl_toko_subquery.id_toko where tbl_harga_subquery.barang_id = tbl_harga.barang_id and tbl_harga_subquery.is_active = 0 and tbl_toko_subquery.jenis = "GUDANG") as stok_gudang, 
             '
         );
         $this->db->from('tbl_harga');
@@ -597,6 +597,13 @@ class Barang_model extends CI_Model
         if ($this->input->post('length') != -1) {
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         }
+
+        // $this->db->get()->result_array();
+
+        // $contoh = $this->db->last_query();
+
+        // var_dump($contoh);
+        // die();
 
         return $this->db->get()->result_array();
     }
