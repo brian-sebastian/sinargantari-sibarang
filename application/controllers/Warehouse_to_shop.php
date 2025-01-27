@@ -111,7 +111,7 @@ class Warehouse_to_shop extends CI_Controller
                 $this->db->where('toko_id', $toko_id);
                 $this->db->where('barang_id', $barang['id_barang']);
                 $existing = $this->db->get('tbl_harga')->row();
-
+               
                 if ($existing) {
                     // Kurangi stok gudang
                     $this->db->set('stok_toko', 'stok_toko - ' . (int)$barang['qty_pindah'], false);
@@ -119,7 +119,8 @@ class Warehouse_to_shop extends CI_Controller
                     $this->db->update('tbl_harga');
 
                     // tambah stok toko & update harga jual toko
-                    $this->db->set('harga_jual', $barang['harga_jual']);
+                    // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                    // $this->db->set('harga_jual', $barang['harga_jual']);
                     $this->db->set('stok_toko', 'stok_toko + ' . (int)$barang['qty_pindah'], false);
                     $this->db->where('toko_id', $toko_id);
                     $this->db->where('barang_id', $barang['id_barang']);
@@ -145,7 +146,8 @@ class Warehouse_to_shop extends CI_Controller
                         'barang_id' => $barang['id_barang'],
                         'toko_id' => $toko_id,
                         'stok_toko' => (int)$barang['qty_pindah'],
-                        'harga_jual' => $barang['harga_jual'],
+                        // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                        // 'harga_jual' => $barang['harga_jual'],
                         'is_active' => 1,
                     ];
                     $this->db->insert('tbl_harga', $data);
@@ -162,15 +164,6 @@ class Warehouse_to_shop extends CI_Controller
                     ];
                     $this->db->insert('tbl_barang_keluar', $data_barang_keluar);
 
-                    // $data_barang_masuk = [
-                    //     'harga_id' => $lastIdHarga,
-                    //     'jml_masuk' => (int)$barang['qty_pindah'],
-                    //     'tanggal_barang_masuk' => date('Y-m-d H:i:s'),
-                    //     'tipe' => 'pindahan_toko_internal',
-                    //     'user_input' => $this->session->userdata('username'),
-                    //     'created_at' => date('Y-m-d H:i:s'),
-                    // ];
-                    // $this->db->insert('tbl_barang_masuk', $data_barang_masuk);
                 }
 
                 $this->db->trans_complete();

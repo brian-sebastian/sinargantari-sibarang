@@ -127,6 +127,8 @@ class Barang_masuk_model extends CI_Model
     public function tambah_data($data)
     {
 
+     
+
         $this->db->trans_start();
         $dariTokoId = $data['dari_toko_by_id_harga'];
         $stok_barang_by_harga = $this->db->get_where('tbl_harga', ['id_harga' => $data['harga_id']])->row_array();
@@ -134,10 +136,12 @@ class Barang_masuk_model extends CI_Model
         $isChangeCode = 0;
         $jml_stok = $stok_barang_by_harga['stok_toko'];
 
+        
         if ($stok_barang_by_harga['stok_toko'] != $data['jml_masuk']) {
             $jml_stok = $data['jml_masuk'];
             $isChangeCode++;
         }
+        
 
         if ($isChangeCode > 0) {
 
@@ -153,6 +157,8 @@ class Barang_masuk_model extends CI_Model
                 'user_input' => $data['user_input'],
                 'created_at' => $data['created_at']
             ];
+
+           
 
             $this->db->insert("tbl_barang_masuk", $dataBarangMasuk);
         }

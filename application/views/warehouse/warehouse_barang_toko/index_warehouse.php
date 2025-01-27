@@ -21,7 +21,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-6">
-                        <h5>Daftar Barang Toko</h5>
+                        <h5>Daftar Barang Gudang</h5>
                         <br>
                         <form id="cari" method="post">
                             <div class="row align-items-center">

@@ -142,8 +142,8 @@ class Warehouse extends CI_Controller
 
         $libary_excel = [
             'func' => 'export',
-            'jenis' => 'barang_toko',
-            'filename' => 'barang_toko_' . strtolower(str_replace(" ", "_", $data[0]["nama_toko"])) . '_' . date('Y_m_d_His') . ".xlsx",
+            'jenis' => 'barang_gudang',
+            'filename' => 'barang_gudang_' . strtolower(str_replace(" ", "_", $data[0]["nama_toko"])) . '_' . date('Y_m_d_His') . ".xlsx",
             'data_barang_toko' => $data,
         ];
 

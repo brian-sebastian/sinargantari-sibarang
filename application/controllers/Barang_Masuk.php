@@ -135,12 +135,15 @@ class Barang_Masuk extends CI_Controller
             if ($this->form_validation->run() == TRUE) {
 
                 $typeInput = htmlspecialchars($this->input->post('tipe'));
-
+              
                 if ($typeInput == 'antar_toko') {
                     $resultValidation = $this->validateTypeAntarToko();
                     $hargaIdToko = htmlspecialchars($this->input->post('harga_id_toko'));
                     $jumlahStokMasuk = htmlspecialchars($this->input->post('jml_masuk'));
+                  
                     $stokToko = $this->Harga_model->getBarangHargaById($hargaIdToko);
+
+                  
                     if ($resultValidation['err_code'] == 0) {
 
                         if ($jumlahStokMasuk <= $stokToko['stok_toko']) {
@@ -161,6 +164,7 @@ class Barang_Masuk extends CI_Controller
                                 'created_at' => date('Y-m-d H:i:s')
                             ];
 
+                            
                             $tambahData =  getReport(TYPE_REPORT_BARANG_MASUK, $data);
                             if ($tambahData) {
                                 $this->session->set_flashdata('berhasil', 'Data Berhasil Di Tambahkan Dan Stok Berhasil Di Update');

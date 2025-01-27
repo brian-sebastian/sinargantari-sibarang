@@ -45,14 +45,14 @@ class Barang_toko extends CI_Controller
         $data['toko']       = $this->toko->ambilSemuaToko();
 
         if ($this->session->userdata('toko_id')) {
-            // $role_id = $this->session->userdata('role_id');
+           
             $toko_id                  = $this->session->userdata('toko_id');
             
             $tokoku = $this->db->where("id_toko", $toko_id)->get("tbl_toko")->row_array();
 
             $data['subtitle']      = "Barang Toko ".$tokoku["nama_toko"];
 
-            // $data['admin_toko_id']          = $role_id;
+           
             $data['toko_id']          = $toko_id;
             $data['harga_barang']     = $this->barang->getBarangHargaToko($toko_id);
             $data['harga_temp']       = $this->harga->ambilBarangTemp($toko_id)->num_rows();
@@ -68,7 +68,7 @@ class Barang_toko extends CI_Controller
         } else {
             if ($this->input->get('toko')) {
 
-                // $role_id = $this->session->userdata('role_id');
+                
                 $id_toko                = $this->input->get('toko');
                 $decrypt_id             = $this->secure->decrypt_url($id_toko);
                 
@@ -76,7 +76,7 @@ class Barang_toko extends CI_Controller
 
                 $data['subtitle']      = "Barang Toko ".$tokoku["nama_toko"];
                 
-                // $data['admin_toko_id']          = $role_id;
+              
                 $data["data_toko"]      = $this->toko->ambilDetailToko($decrypt_id);
                 $data['harga_barang']   = $this->barang->getHargaBarangToko($decrypt_id);
                 $data['harga_temp']     = $this->harga->ambilBarangTemp($decrypt_id)->num_rows();
@@ -118,27 +118,22 @@ class Barang_toko extends CI_Controller
 
     public function ajaxBarangToko()
     {
-        // $role_id = $this->session->userdata('role_id');
+       
      
         $toko_id = $this->input->post("toko_id");
         $enkripsi_toko_id = $this->secure->encrypt_url($toko_id);
         $kategori_id = $this->input->post('kategori_id');
 
-        // var_dump($kategori_id);
-        // die();
-        
         $data = $this->barang->ambilSemuaBarangToko($toko_id, $kategori_id);
         $hitungBarangToko = $this->barang->ambilHitungBarangToko($toko_id);
         $filterBarangToko = $this->barang->ambilFilterBarangToko($toko_id);
+
+        
 
         $row = [];
         $no = 1;
 
         foreach ($data as $d) {
-            // $harga_pokok = (!in_array($role_id, [18, 21]));
-
-            // var_dump($this->session->userdata('role_id'));
-            // die();
 
             $stok_tersedia = $d['stok_toko'] + $d['stok_gudang'];
 
