@@ -16,14 +16,19 @@ class Laporan_stok extends CI_Controller
 
     public function index()
     {
+        $role_id = $this->session->userdata('toko_id');
 
         $this->view["title_menu"]    = "Laporan";
         $this->view["title"]         = "Laporan Stok";
         $this->view["content"]       = "laporan_stok/v_laporan_stok";
         // load data yang di perlukan disini
-        $this->view["data_barang"]  = $this->barang->getAllBarang();
+        if($role_id){
+            $this->view["data_barang_toko"] = $this->harga->ambilBarangBerdasarkanToko($role_id);
+        }else{
+            $this->view["data_barang"]  = $this->barang->getAllBarang();
+        }
         $this->view["data_toko"]    = $this->toko->ambilSemuaToko();
-
+       
         $this->load->view("layout/wrapper", $this->view);
     }
 

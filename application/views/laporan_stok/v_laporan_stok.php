@@ -39,6 +39,12 @@
                                         <label for="harga_id">Barang : </label>
                                         <select name="harga_id" id="harga_id" class="form-control select2">
                                             <option value="">- Semua -</option>
+                                            <?php $role_id = $this->session->userdata('role_id'); ?>
+                                            <?php if($role_id) : ?>
+                                                <?php foreach($data_barang_toko as $dt) :?>
+                                                    <option value="<?= $dt['id_harga']?>"> <?= $dt['nama_barang']?></option>
+                                                <?php endforeach; ?>
+                                            <?php endif;?>
                                         </select>
                                     </div>
                                     <div class="col-md-6">

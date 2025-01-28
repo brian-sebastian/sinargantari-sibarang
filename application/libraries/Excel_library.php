@@ -1492,13 +1492,14 @@ class Excel_library
                     $no++;
                     $cell++;
                 }
-              
+
+            
                 $activeWorksheet->mergeCells("A$cell:C$cell");
                 $activeWorksheet->setCellValue("A$cell", "Total");
                 $activeWorksheet->getStyle("A$cell")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $activeWorksheet->setCellValue("D$cell", $totalJmlStok);
-                $activeWorksheet->setCellValue("E$cell", $totalJmlStok);
-                $activeWorksheet->setCellValue("F$cell", $totalJmlStok);
+                $activeWorksheet->setCellValue("E$cell", $totalJmlStokToko);
+                $activeWorksheet->setCellValue("F$cell", $totalJmlStokGudang);
                 $activeWorksheet->setCellValue("G$cell",  $totalHargaJual);
                 $activeWorksheet->getStyle("G$cell")->getNumberFormat()->setFormatCode('#,##0');
                 $activeWorksheet->setCellValue("H$cell", $totalJmlMasuk);
