@@ -62,8 +62,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Barang</th>
-                                        <th>Qty Barang Toko</th>
-                                        <th>Jml Pindah Gudang</th>
+                                        <th>Qty Barang Gudang</th>
+                                        <th>Jml Pindah Toko</th>
                                         <th>Pilih</th>
                                     </tr>
                                 `);
