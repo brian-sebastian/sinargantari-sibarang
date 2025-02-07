@@ -67,7 +67,9 @@ class Laporan_Penjualan extends CI_Controller
             $row[] = number_format($d['total_harga_jual']);
             // temporary
             $row[] = number_format($d['total_diskon']);
-            $row[] = number_format($d['total_keuntungan']);
+            if($admin_toko){
+                $row[] = number_format($d['total_keuntungan']);
+            }
             $row[] = $d['kode_order'];
 
             array_push($newArr, $row);

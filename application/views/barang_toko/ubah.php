@@ -29,7 +29,11 @@
                     <div class="row">
                         <div class="col mb-3">
                             <label for="type" class="form-label">Barang</label>
-                            <input type="text" id="nama_barang" name="nama_barang" class="form-control" value="<?= set_value('nama_barang', $barang['nama_barang'] . " (Harga pokok : Rp" . number_format($barang['harga_pokok']) . ")") ?>" required readonly />
+                            <?php if ($this->session->userdata('role_id') == 1 || $this->session->userdata('role_id') == 2) { ?>
+                                <input type="text" id="nama_barang" name="nama_barang" class="form-control" value="<?= set_value('nama_barang', $barang['nama_barang'] . " (Harga pokok : Rp" . number_format($barang['harga_pokok']) . ")") ?>" required readonly />
+                            <?php } else { ?>
+                                <input type="text" id="nama_barang" name="nama_barang" class="form-control" value="<?= set_value('nama_barang', $barang['nama_barang']) ?>" required readonly />
+                            <?php } ?>
                             <?= form_error('barang_id', '<small class="text-danger">', '</small>') ?>
                         </div>
                     </div>

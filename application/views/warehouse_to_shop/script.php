@@ -34,6 +34,9 @@
             if (toko_id) {
 
                 if (toko_id) {
+                    $('#cari_barang').removeClass('d-none');
+                    var nama_barang = $('#cari_barang').val();
+                    console.log(nama_barang);
                     $('#nama_toko').removeClass('d-block');
                     $('#nama_toko').addClass('d-none');
                     $.ajax({

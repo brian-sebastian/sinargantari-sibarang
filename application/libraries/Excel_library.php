@@ -1101,7 +1101,9 @@ class Excel_library
                 }
                 $activeWorksheet->setCellValue("K5", "Total harga jual");
                 $activeWorksheet->setCellValue("L5", "Total diskon");
-                $activeWorksheet->setCellValue("M5", "Total keuntungan");
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->setCellValue("M5", "Total keuntungan");
+                }
                 $activeWorksheet->setCellValue("N5", "Tanggal beli");
 
 
@@ -1132,12 +1134,16 @@ class Excel_library
                     }
                     $activeWorksheet->setCellValue("K$cell", $d["total_harga_jual"]);
                     $activeWorksheet->setCellValue("L$cell", $d["total_diskon"]);
-                    $activeWorksheet->setCellValue("M$cell", $d["total_keuntungan"]);
+                    if($data['sess_admin_toko']){
+                        $activeWorksheet->setCellValue("M$cell", $d["total_keuntungan"]);
+                    }
                     $activeWorksheet->setCellValue("N$cell", $d["tanggal_beli"]);
 
                     $activeWorksheet->getStyle("B$cell:N$cell")->applyFromArray($styleArray2);
 
-                    $totalSemuaKeuntungan  += $d['total_keuntungan'];
+                    if($data['sess_admin_toko']){
+                        $totalSemuaKeuntungan  += $d['total_keuntungan'];
+                    }
 
                     $urutan++;
                     $cell++;
@@ -1152,14 +1158,18 @@ class Excel_library
                 }
                 $activeWorksheet->getStyle("K$first_cell:K$cell")->getNumberFormat()->setFormatCode('#,##0');
                 $activeWorksheet->getStyle("L$first_cell:L$cell")->getNumberFormat()->setFormatCode('#,##0');
-                $activeWorksheet->getStyle("M$first_cell:M$cell")->getNumberFormat()->setFormatCode('#,##0');
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->getStyle("M$first_cell:M$cell")->getNumberFormat()->setFormatCode('#,##0');
+                }
 
                 $activeWorksheet->mergeCells("B$cell:L$cell");
                 $activeWorksheet->setCellValue("B$cell", "Total");
                 $activeWorksheet->getStyle("B$cell")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $activeWorksheet->setCellValue("M$cell", $totalSemuaKeuntungan);
+                if($data['sess_admin_toko']){
+                    $activeWorksheet->setCellValue("M$cell", $totalSemuaKeuntungan);
 
-                $activeWorksheet->getStyle("M$cell")->getNumberFormat()->setFormatCode('#,##0');
+                    $activeWorksheet->getStyle("M$cell")->getNumberFormat()->setFormatCode('#,##0');
+                }
 
                 $activeWorksheet->getStyle("B$cell:N$cell")->applyFromArray($styleArray);
                 $activeWorksheet->getStyle("B$cell:N$cell")->applyFromArray($styleArray1);

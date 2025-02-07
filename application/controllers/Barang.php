@@ -189,11 +189,7 @@ class Barang extends CI_Controller
                 $config['file_name']            = rand();
                 $config['upload_path']          = './assets/file_barang';
                 $config['allowed_types']        = 'jpg|jpeg|png|JPG|JPEG|PNG';
-                $config['max_size']             = 2024;
-                $config['max_width']            = 1000;
-                $config['max_height']           = 1000;
-                $config['min_width']            = 250;
-                $config['min_height']           = 250;
+                $config['max_size']             = 3024;
 
                 $this->load->library("upload");
                 $this->upload->initialize($config);
@@ -370,11 +366,7 @@ class Barang extends CI_Controller
                 $config['file_name']            = rand();
                 $config['upload_path']          = './assets/file_barang';
                 $config['allowed_types']        = 'jpg|jpeg|png|JPG|JPEG|PNG';
-                $config['max_size']             = 2024;
-                $config['max_width']            = 1000;
-                $config['max_height']           = 1000;
-                $config['min_width']            = 250;
-                $config['min_height']           = 250;
+                $config['max_size']             = 3024;
 
                 $this->load->library("upload");
                 $this->upload->initialize($config);
