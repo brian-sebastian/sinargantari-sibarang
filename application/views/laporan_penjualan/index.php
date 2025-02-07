@@ -94,7 +94,9 @@
                                     <?php endif; ?>
                                     <th>Total harga jual</th>
                                     <th>Total diskon</th>
-                                    <th>Total keuntungan</th>
+                                    <?php if($admin_toko) : ?>
+                                        <th>Total keuntungan</th>
+                                    <?php endif; ?>
                                     <th>Kode order</th>
                                 </tr>
                             </thead>

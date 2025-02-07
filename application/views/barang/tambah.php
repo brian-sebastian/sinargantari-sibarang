@@ -108,6 +108,7 @@
                         <div class="col mb-3">
                             <label for="gambar">File gambar : </label>
                             <input type="file" name="gambar" id="gambar" class="dropify">
+                            <small class="text-danger">Ukuran gambar maximal 3mb</small>
                             <?php if ($this->session->flashdata("gambar")) : ?>
                                 <small class="text-danger"><?= $this->session->flashdata("gambar") ?></small>
                             <?php endif ?>

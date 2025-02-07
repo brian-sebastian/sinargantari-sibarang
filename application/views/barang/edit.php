@@ -93,6 +93,7 @@
                         </div>
                     </div>
 
+                    <?php if ($this->session->userdata('role_id') == 1 || $this->session->userdata('role_id') == 2) { ?>
                     <div class="row">
                         <div class="col mb-3">
                             <label for="type" class="form-label">Harga Pokok Barang</label>
@@ -100,6 +101,8 @@
                             <?= form_error('harga_pokok', '<small class="text-danger">', '</small>') ?>
                         </div>
                     </div>
+                    <?php } ?>
+                    
                     <div class="row">
                         <div class="col mb-3">
                             <label for="type" class="form-label">Deskripsi Barang</label>
@@ -114,6 +117,7 @@
                             <label for="gambar">File gambar : </label>
                             <input type="file" name="gambar" id="gambar" class="dropify">
                             <input type="hidden" name="gambar_old" id="gambar_old" class="form-control" value="<?= $barang["gambar"] ?>">
+                            <small class="text-danger">Ukuran gambar maximal 3mb</small>
                             <?php if ($this->session->flashdata("gambar")) : ?>
                                 <small class="text-danger"><?= $this->session->flashdata("gambar") ?></small>
                             <?php endif ?>

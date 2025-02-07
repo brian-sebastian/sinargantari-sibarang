@@ -29,9 +29,15 @@
                             <select name="gudang" id="gudang" class="form-select mb-2">
                                 <option value="">--PILIH GUDANG--</option>
                                 <?php foreach ($gudang as $gd) : ?>
-                                    <option value="<?= $this->secure->encrypt_url($gd['id_toko']) ?>" <?php if (isset($_GET["gd"]) && ($this->secure->decrypt_url($_GET["gd"]) == $gd["id_toko"])) {
-                                                                                                            echo "selected";
-                                                                                                        } ?>><?= $gd['nama_toko'] ?></option>
+                                    <option value="<?= $this->secure->encrypt_url($gd['id_toko']) ?>" 
+                                        <?php 
+                                            if (isset($_GET["gd"]) && ($this->secure->decrypt_url($_GET["gd"]) == $gd["id_toko"])) 
+                                            {
+                                                echo "selected";
+                                            } 
+                                        ?>>
+                                        <?= $gd['nama_toko'] ?>
+                                    </option>
                                 <?php endforeach ?>
                             </select>
 
@@ -69,10 +75,22 @@
         <div class="card mb-2 mt-2">
             <div class="card-header">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-6">
                         <button class="btn btn-sm btn-primary d-none" id="btn-savetlwh" type="button">
                             <span class="tf-icons bx bxs-save"></span>&nbsp; Simpan
                         </button>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input type="text" class="form-control d-none" name="cari_barang" id="cari_barang" placeholder="Cari Nama Barang">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-sm btn-primary" id="btn-cari" type="button">
+                                    <span class="tf-icons bx bxs-save"></span>&nbsp; cari
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
