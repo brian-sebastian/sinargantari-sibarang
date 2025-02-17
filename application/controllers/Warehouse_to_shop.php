@@ -43,7 +43,7 @@ class Warehouse_to_shop extends CI_Controller
         $data['title_menu'] = "Stok Gudang Toko";
         $data['title']      = "Stok Gudang Toko";
         $data['toko']       = $this->warehouse->getShopWarehouse('RESULT', 'TOKO');
-        $data['gudang']       = $this->warehouse->getShopWarehouse('RESULT', 'GUDANG');
+        $data['gudang']     = $this->warehouse->getShopWarehouse('RESULT', 'GUDANG');
         $data['kategori']   = $this->kategori->ambilSemuaKategori();
 
         $this->load->view('layout/header', $data);
@@ -59,11 +59,16 @@ class Warehouse_to_shop extends CI_Controller
     public function getBarangGudang()
     {
         $toko_id = $this->input->get('toko_id');
+        $cari_barang = $this->input->get("cari_barang");
         $dec = $this->secure->decrypt_url($toko_id);
         $this->db->select('b.id_barang, b.nama_barang, k.nama_kategori, h.stok_toko, h.harga_jual, b.berat_barang, b.barcode_barang, h.id_harga');
         $this->db->from('tbl_harga h');
         $this->db->join('tbl_barang b', 'b.id_barang = h.barang_id');
         $this->db->join('tbl_kategori k', 'k.id_kategori = b.kategori_id');
+        // if ($this->input->get("cari_barang")) {
+        //     // do query cari_barang
+        //     $this->db->like("b.nama_barang", htmlspecialchars($this->input->get("cari_barang")));
+        // }
         $this->db->where('h.toko_id', $dec);
         $query = $this->db->get();
         $data = $query->result_array();

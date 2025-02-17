@@ -23,7 +23,7 @@ class Barang_model extends CI_Model
         $this->db->from('tbl_barang');
         $this->db->join('tbl_kategori', 'tbl_kategori.id_kategori = tbl_barang.kategori_id');
         $this->db->join('tbl_satuan', 'tbl_satuan.id_satuan = tbl_barang.satuan_id');
-        $this->db->where('tbl_barang.is_active', 1);
+        // $this->db->where('tbl_barang.is_active', 1);
 
         $search = $this->input->post("search");
 

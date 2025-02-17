@@ -35,8 +35,7 @@
 
                 if (toko_id) {
                     $('#cari_barang').removeClass('d-none');
-                    var nama_barang = $('#cari_barang').val();
-                    console.log(nama_barang);
+                    $('#btn_cari_barang').removeClass('d-none');
                     $('#nama_toko').removeClass('d-block');
                     $('#nama_toko').addClass('d-none');
                     $.ajax({
@@ -131,14 +130,15 @@
                     });
                 }
 
-
-
             } else {
                 $('#daftarTableBarangToko tbody').html('');
             }
         });
 
-
+        $("#cari_barang").on("change", function() {
+            var cari_barang = $(this).val();
+            console.log(cari_barang);
+        })
 
         // save
         $('#btn-savetlwh').on('click', function() {

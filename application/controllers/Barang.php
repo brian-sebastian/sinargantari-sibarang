@@ -112,56 +112,103 @@ class Barang extends CI_Controller
 
     public function tambah()
     {
-        $field = [
-            [
-                'field' => 'kode_barang',
-                'label' => 'Kode Barang',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'nama_barang',
-                'label' => 'Nama Barang',
-                // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
-                // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
-                'rules' => 'required|trim|max_length[100]',
-            ],
-            [
-                'field' => 'barcode_barang',
-                'label' => 'Barcode barang',
-                'rules' => 'trim|max_length[50]|is_unique[tbl_barang.barcode_barang]'
-            ],
-            [
-                'field' => 'slug_barang',
-                'label' => 'Slug Barang',
-                'rules' => 'required|trim'
-            ],
-            [
-                'field' => 'kategori_id',
-                'label' => 'Kategori',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'berat_barang',
-                'label' => 'Berat Barang',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'satuan_id',
-                'label' => 'Satuan',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'harga_pokok',
-                'label' => 'Harga Pokok',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'deskripsi',
-                'label' => 'Deskripsi',
-                'rules' => 'required'
-            ]
+        if ($this->session->userdata('role_id') == 1 || $this->session->userdata('role_id') == 2) {
+            $field = [
+                [
+                    'field' => 'kode_barang',
+                    'label' => 'Kode Barang',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'nama_barang',
+                    'label' => 'Nama Barang',
+                    // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
+                    // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
+                    'rules' => 'required|trim|max_length[100]',
+                ],
+                [
+                    'field' => 'barcode_barang',
+                    'label' => 'Barcode barang',
+                    'rules' => 'trim|max_length[50]|is_unique[tbl_barang.barcode_barang]'
+                ],
+                [
+                    'field' => 'slug_barang',
+                    'label' => 'Slug Barang',
+                    'rules' => 'required|trim'
+                ],
+                [
+                    'field' => 'kategori_id',
+                    'label' => 'Kategori',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'berat_barang',
+                    'label' => 'Berat Barang',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'satuan_id',
+                    'label' => 'Satuan',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'harga_pokok',
+                    'label' => 'Harga Pokok',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'deskripsi',
+                    'label' => 'Deskripsi',
+                    'rules' => 'required'
+                ]
 
-        ];
+            ];
+        } else {
+            $field = [
+                [
+                    'field' => 'kode_barang',
+                    'label' => 'Kode Barang',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'nama_barang',
+                    'label' => 'Nama Barang',
+                    // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
+                    // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
+                    'rules' => 'required|trim|max_length[100]',
+                ],
+                [
+                    'field' => 'barcode_barang',
+                    'label' => 'Barcode barang',
+                    'rules' => 'trim|max_length[50]|is_unique[tbl_barang.barcode_barang]'
+                ],
+                [
+                    'field' => 'slug_barang',
+                    'label' => 'Slug Barang',
+                    'rules' => 'required|trim'
+                ],
+                [
+                    'field' => 'kategori_id',
+                    'label' => 'Kategori',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'berat_barang',
+                    'label' => 'Berat Barang',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'satuan_id',
+                    'label' => 'Satuan',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'deskripsi',
+                    'label' => 'Deskripsi',
+                    'rules' => 'required'
+                ]
+            ];
+        }
 
         $this->form_validation->set_rules($field);
         if ($this->form_validation->run() == FALSE) {
@@ -183,6 +230,11 @@ class Barang extends CI_Controller
 
             $inputHPP = htmlspecialchars($this->input->post('harga_pokok'));
             $removeSeparator = str_replace(',', '', $inputHPP);
+            $is_active = 0;
+
+            if ($removeSeparator) {
+                $is_active = 1;
+            }
 
             if (!empty($_FILES["gambar"]["name"])) {
 
@@ -228,7 +280,7 @@ class Barang extends CI_Controller
                     'satuan_id'         => htmlspecialchars($this->input->post('satuan_id')),
                     'harga_pokok'       => $removeSeparator,
                     'gambar'            => ($namefile) ? $namefile : null,
-                    'is_active'         => 1,
+                    'is_active'         => $is_active,
                     'deskripsi'         => htmlspecialchars($this->input->post('deskripsi')),
                     'user_input'        => $this->session->userdata('username'),
                     'created_at'        => date('Y-m-d H:i:s')
@@ -310,31 +362,54 @@ class Barang extends CI_Controller
     {
         $id = $this->input->post('id_barang');
 
-        $field = [
-            [
-                'field' => 'nama_barang',
-                'label' => 'Nama Barang',
-                // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
-                // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
-                'rules' => 'required|trim|max_length[100]',
-            ],
-            [
-                'field' => 'kategori_id',
-                'label' => 'Kategori',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'satuan_id',
-                'label' => 'Satuan',
-                'rules' => 'required'
-            ],
-            [
-                'field' => 'harga_pokok',
-                'label' => 'Harga Pokok',
-                'rules' => 'required'
-            ],
+        $data_barang = $this->barang->getFindById($id);
 
-        ];
+        if ($this->session->userdata('role_id') == 1 || $this->session->userdata('role_id') == 2) {
+            $field = [
+                [
+                    'field' => 'nama_barang',
+                    'label' => 'Nama Barang',
+                    // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
+                    // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
+                    'rules' => 'required|trim|max_length[100]',
+                ],
+                [
+                    'field' => 'kategori_id',
+                    'label' => 'Kategori',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'satuan_id',
+                    'label' => 'Satuan',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'harga_pokok',
+                    'label' => 'Harga Pokok',
+                    'rules' => 'required'
+                ],
+            ];
+        } else {
+            $field = [
+                [
+                    'field' => 'nama_barang',
+                    'label' => 'Nama Barang',
+                    // 'rules' => 'required|trim|regex_match[/^(?!0*[.,]?0+$)\d*[.,]?\d+$/m]',
+                    // 'rules' => 'required|trim|regex_match[/^[a-zA-Z0-9\s]+$/]',
+                    'rules' => 'required|trim|max_length[100]',
+                ],
+                [
+                    'field' => 'kategori_id',
+                    'label' => 'Kategori',
+                    'rules' => 'required'
+                ],
+                [
+                    'field' => 'satuan_id',
+                    'label' => 'Satuan',
+                    'rules' => 'required'
+                ],
+            ];
+        }
 
         $this->form_validation->set_rules($field);
 
@@ -358,8 +433,17 @@ class Barang extends CI_Controller
             $err        = FALSE;
             $namefile   = htmlspecialchars($this->input->post("gambar_old"));
 
+            $removeSeparator = $data_barang["harga_pokok"];
+            $is_active       = $data_barang["is_active"];
+
             $inputHPP   = htmlspecialchars($this->input->post('harga_pokok'));
-            $removeSeparator = str_replace(',', '', $inputHPP);
+
+            if (empty($data_barang["harga_pokok"])) {
+                $removeSeparator = str_replace(',', '', $inputHPP);
+                if ($removeSeparator) {
+                    $is_active = 1;
+                }
+            }
 
             if (!empty($_FILES["gambar"]["name"])) {
 
@@ -415,6 +499,7 @@ class Barang extends CI_Controller
                     'harga_pokok'   => $removeSeparator,
                     'gambar'        => ($namefile) ? $namefile : null,
                     'deskripsi'     => htmlspecialchars($this->input->post('deskripsi')),
+                    'is_active'     => $is_active,
                     'user_update'   => $this->session->userdata('username'),
                     'updated_at'    => date('Y-m-d H:i:s')
                 ];
