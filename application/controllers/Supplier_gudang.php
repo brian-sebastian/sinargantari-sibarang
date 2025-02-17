@@ -13,6 +13,7 @@ class Supplier_gudang extends CI_Controller{
         $this->load->model("Supplier_model", "supplier");
         $this->load->model("Gudang_model", "gudang");
         $this->load->model("Barang_model", "barang");
+        $this->load->model("Harga_model");
     }
 
     public function index(){
@@ -79,11 +80,17 @@ class Supplier_gudang extends CI_Controller{
             $this->view["content"]          = "supplier_gudang/index";
             $this->view["data_suppliers"]   = $this->supplier->getAllSupplier();
             $this->view["data_gudangs"]     = $this->gudang->getGudang();
-            $this->view["data_barangs"]     = $this->barang->getAllBarang();
 
             $this->load->view("layout/wrapper", $this->view);
         }
 
+    }
+
+    public function getDataBarangHargaAjaxByGudang()
+    {
+        $currentTokoId = $this->input->post('toko_id');
+        $result = $this->Harga_model->ambilBarangBerdasarkanGudang($currentTokoId);
+        echo json_encode($result);
     }
 
 }

@@ -165,6 +165,18 @@ class Harga_model extends CI_Model
         return $query->result_array();
     }
 
+    public function ambilBarangBerdasarkanGudang($toko_id)
+    {
+
+        $this->db->select("tbl_harga.id_harga, tbl_barang.id_barang, tbl_barang.nama_barang, tbl_harga.stok_toko");
+        $this->db->from("tbl_harga");
+        $this->db->join("tbl_barang", "tbl_barang.id_barang = tbl_harga.barang_id");
+        $this->db->where("tbl_harga.toko_id", $toko_id);
+        $this->db->where("tbl_harga.is_active", 0);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function ambilBarangBerdasarkanTokoDanKecualiIdHarga($data_barang)
     {
         $toko_id = $data_barang['id_toko'];

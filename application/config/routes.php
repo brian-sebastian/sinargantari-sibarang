@@ -358,6 +358,7 @@ $route["gudang/toko_gudang/saveBarang"]                  = "shop_warehouse/saveB
 
 
 $route["gudang/supplier_gudang"] = "supplier_gudang/index";
+$route["gudang/getDataBarangHargaAjax"] = "supplier_gudang/getDataBarangHargaAjaxByGudang";
 $route["gudang/pindah_gudang"] = "pindah_gudang/index";
 $route["gudang/pindah_gudang/data_gudang"] = "pindah_gudang/data_gudang";
 $route["gudang/import_gudang"] = "import_gudang/index";

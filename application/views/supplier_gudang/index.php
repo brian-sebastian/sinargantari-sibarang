@@ -53,11 +53,9 @@
                             <div class="row mb-3" id="barang_id">
                                 <label class="col-sm-2 col-form-label" for="basic-default-name">List Barang</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control select2 " name="barang_id" id="barang_id" style="width: 100%;">
+                                    <select class="form-control select2 " name="barang_id" id="list_barang" style="width: 100%;">
                                         <option value="">-- Pilih --</option>
-                                        <?php foreach ($data_barangs as $data_barang) : ?>
-                                            <option value="<?= $data_barang['id_barang'] ?>"><?= $data_barang['nama_barang'] ?></option>
-                                        <?php endforeach; ?>
+                                       
                                     </select>
                                     <?= form_error('barang_id', '<small class="text-danger">', '</small>') ?>
                                 </div>
@@ -95,3 +93,32 @@
 </div>
 <!-- / Content -->
 
+<script>
+    $(document).ready(function(){
+        $('#gudang_id').on('change', function() {
+            let selectedGudang = $(this).val();
+            $("#list_barang").html('<option value="">Memuat...</option>');
+            let BASE_URL_HARGAIDGUDANG = '<?= base_url() ?>'
+            $.ajax({
+                url: BASE_URL_HARGAIDGUDANG + 'gudang/getDataBarangHargaAjax',
+                type: 'POST',
+                    data: {
+                        toko_id: selectedGudang
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        var options = '<option value="">-- Pilih Barang --</option>';
+                        $.each(response, function(index, item) {
+                            options += '<option value="' + item.id_barang + '">' + item.nama_barang + '</option>';
+                        });
+                        $("#list_barang").html(options);
+                        $("#list_barang").trigger('change');
+                       
+                    },
+                    error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    })
+</script>
