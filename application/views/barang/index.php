@@ -36,6 +36,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th class="text-center">Gambar Barang</th>
                             <th class="text-center">Nama Barang</th>
                             <th class="text-center">Barcode Barang</th>
                             <th class="text-center">Actions</th>

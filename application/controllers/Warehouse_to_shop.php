@@ -59,20 +59,26 @@ class Warehouse_to_shop extends CI_Controller
     public function getBarangGudang()
     {
         $toko_id = $this->input->get('toko_id');
-        $cari_barang = $this->input->get("cari_barang");
+        $cari = $this->input->get('cari_barang');
+       
         $dec = $this->secure->decrypt_url($toko_id);
+      
         $this->db->select('b.id_barang, b.nama_barang, k.nama_kategori, h.stok_toko, h.harga_jual, b.berat_barang, b.barcode_barang, h.id_harga');
         $this->db->from('tbl_harga h');
         $this->db->join('tbl_barang b', 'b.id_barang = h.barang_id');
         $this->db->join('tbl_kategori k', 'k.id_kategori = b.kategori_id');
-        // if ($this->input->get("cari_barang")) {
-        //     // do query cari_barang
-        //     $this->db->like("b.nama_barang", htmlspecialchars($this->input->get("cari_barang")));
-        // }
         $this->db->where('h.toko_id', $dec);
+        if (!empty($cari)) {
+            // do query cari_barang
+            $this->db->like("b.nama_barang", $cari);
+        }
         $query = $this->db->get();
         $data = $query->result_array();
-        echo json_encode(['status' => true, 'data' => $data]);
+        if(!empty($data)){
+            echo json_encode(['status' => true, 'data' => $data]);
+        }else{
+            echo json_encode(['status' => false, 'message' => "Barang Tidak Di Temukan"]);
+        }
     }
 
     public function getBarangLuar()
@@ -107,16 +113,22 @@ class Warehouse_to_shop extends CI_Controller
         $barang_data = $this->input->post('barang_data');
         $valid = true;
         $message = '';
+    //    var_dump($barang_data);
+    //    die;
 
         if (!empty($barang_data)) {
             foreach ($barang_data as $barang) {
 
                 $this->db->trans_start();
-
+                // var_dump($toko_id);
+                // var_dump($barang['id_barang']);
                 $this->db->where('toko_id', $toko_id);
                 $this->db->where('barang_id', $barang['id_barang']);
                 $existing = $this->db->get('tbl_harga')->row();
-               
+                //    var_dump($existing);
+                //    die;
+                // var_dump($barang['qty_pindah']);
+                // die;
                 if ($existing) {
                     // Kurangi stok gudang
                     $this->db->set('stok_toko', 'stok_toko - ' . (int)$barang['qty_pindah'], false);

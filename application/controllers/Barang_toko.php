@@ -144,6 +144,7 @@ class Barang_toko extends CI_Controller
 
             $col[]  = $no;
             $col[] = "<input type='checkbox' class='form-check-input checkbox_data' value='" . $d['id_harga'] . "'>";
+            $col[] = ($d["gambar"]) ? "<img src=".base_url('assets/file_barang/'.$d["gambar"])." width="."100".">" : "<p class="."text-dark".">Tidak Ada Gambar</p>";
             $col[]  = ($d["barcode_barang"] == null) ? "<a class='btn btn-info btn-sm' href='" . base_url('barang/create_barcode/') . $d['kode_barang'] . "'>Create Barcode</a>" : "<img src='" . base_url('assets/barcodes/') . $d['barcode_barang'] . '.png' . "' alt='' srcset=''>";
             $col[]  = $d["nama_barang"];
             $col[]  = $d["nama_kategori"];
@@ -171,9 +172,9 @@ class Barang_toko extends CI_Controller
                 }
 
                 if ($this->session->userdata('role_id') == 2 || $this->session->userdata('role_id') == 1) {
-                    $col[11] .= $contentDisable;
+                    $col[12] .= $contentDisable;
                 } else {
-                    $col[10] .= $contentDisable;
+                    $col[11] .= $contentDisable;
                 }
 
             } else {

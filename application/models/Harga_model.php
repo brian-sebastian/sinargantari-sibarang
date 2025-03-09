@@ -154,7 +154,7 @@ class Harga_model extends CI_Model
     public function ambilBarangBerdasarkanToko($toko_id)
     {
 
-        $this->db->select("tbl_harga.id_harga, tbl_barang.id_barang, tbl_barang.nama_barang, tbl_barang.kode_barang,tbl_barang.barcode_barang, ,tbl_harga.stok_toko");
+        $this->db->select("tbl_harga.id_harga, tbl_barang.id_barang, tbl_barang.nama_barang, tbl_barang.gambar, tbl_barang.kode_barang,tbl_barang.barcode_barang, ,tbl_harga.stok_toko");
         $this->db->from("tbl_harga");
         $this->db->join("tbl_barang", "tbl_barang.id_barang = tbl_harga.barang_id", "inner");
         $this->db->where("tbl_harga.toko_id", $toko_id);

@@ -63,6 +63,7 @@
                             <tr>
                                 <th>No</th>
                                 <th><input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"></th>
+                                <th>Gambar Barang</th>
                                 <th>Barcode Barang</th>
                                 <th>Barang</th>
                                 <th>Kategori</th>
