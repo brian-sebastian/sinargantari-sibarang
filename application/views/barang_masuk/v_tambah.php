@@ -31,7 +31,7 @@
                             <div class="col-sm-10">
                                 <div class="form-check form-check-inline">
                                    <input class="form-check-input" name="tipe" type="radio" id="antar_toko" value="antar_toko">
-                                   <label for="antar_toko" class="form-check-label">Antar Toko Atau Gudang</label>
+                                   <label for="antar_toko" class="form-check-label">Antar Toko Ke Gudang</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" name="tipe" type="radio" id="gudangsupplier" value="gudangsupplier">

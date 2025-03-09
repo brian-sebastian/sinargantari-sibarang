@@ -80,18 +80,13 @@
                         </button>
                     </div>
                     <div class="col-6">
-                        <form method="GET">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control d-none" name="cari_barang" id="cari_barang" placeholder="Cari Nama Barang">
-                                </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-sm btn-primary d-none" id="btn_cari_barang" type="button">
-                                        <span class="tf-icons bx bxs-search"></span>&nbsp; Cari
-                                    </button>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control d-none" name="cari_barang" id="cari_barang" placeholder="Cari Nama Barang">
                             </div>
-                        </form>
+                                
+                        </div>
+                   
                     </div>
                 </div>
             </div>

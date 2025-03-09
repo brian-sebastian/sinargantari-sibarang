@@ -119,6 +119,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 10px;">Action</th>
+                                    <th>Gambar Barang</th>
                                     <th style="width: 50px;">Nama barang</th>
                                     <!-- <th>Kode barang</th> -->
                                     <th>Barcode</th>
@@ -130,6 +131,7 @@
                                 foreach ($barang_toko as $bt) : ?>
                                     <tr>
                                         <td><button data-barcode="<?= $bt["barcode_barang"] ?>" class="btn btn-sm btn-warning myChoice">Pilih</button></td>
+                                        <td><img src="<?= base_url('assets/file_barang/'. $bt["gambar"].'')?>" alt="" width="150"> </td>
                                         <td><?= $bt["nama_barang"] ?></td>
                                         <!-- <td>
                                             <? //= $bt["kode_barang"] 

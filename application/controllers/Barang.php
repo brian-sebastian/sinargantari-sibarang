@@ -68,7 +68,8 @@ class Barang extends CI_Controller
             $col = [];
 
             $col[]  = $no;
-            $col[]  = $d["nama_barang"];
+            $col[]  = ($d["gambar"]) ? "<img src=".base_url('assets/file_barang/'.$d["gambar"])." width="."100".">" : "<p class="."text-dark".">Tidak Ada Gambar</p>";
+            $col[]  = ($d["harga_pokok"]) ? "<p class="."text-dark".">".$d["nama_barang"]."</p>" : "<p class="."text-danger".">". $d["nama_barang"]."</p>";
             $col[]  = (!$d["barcode_barang"]) ? ("<a class='btn btn-info btn-sm' href='" . base_url('barang/create_barcode/') . $d['kode_barang'] . "'><span class='tf-icons bx bx-barcode'></span>&nbsp; Buat Barcode</a>") : ("<img src='" . base_url('assets/barcodes/') . $d['barcode_barang'] . '.png' . "' alt='' srcset=''>");
             $col[]  = "<button id='detail_barang' class='btn btn-info btn-sm' data-id='" . $d['id_barang'] . "' data-bs-toggle='modal' data-bs-target='#lihatBarang_Modal'><span class='tf-icons bx bx-show-alt'></span>&nbsp; Detail</button>
             <button class='btn btn-secondary btn-sm ' onclick='detail_button(" . $d['id_barang'] . ")'><span class='tf-icons bx bx-barcode'></span>&nbsp; Ubah Barcode</button>
@@ -87,11 +88,11 @@ class Barang extends CI_Controller
                         $contentDisable =  " <button class='btn btn-sm btn-danger re-removes-again' data-id='" . base64_encode($d["id_barang"]) . "' data-idreq='" . base64_encode($resCheckBarangRejectedOrAccepted['data']['id_request']) . "' data-bs-toggle='modal' data-bs-target='#remove_again_from_rejected'><span class='tf-icons bx bx-trash'></span>&nbsp; Request Hapus Lagi</button> ";
                     }
                 }
-                $col[3] .= $contentDisable;
+                $col[4] .= $contentDisable;
             } else {
 
                 $contentButton =  " <button class='btn btn-sm btn-danger removes' data-id='" . base64_encode($d["id_barang"]) . "' data-bs-toggle='modal' data-bs-target='#remove_modal'><span class='tf-icons bx bx-trash'></span>&nbsp; Hapus</button>";
-                $col[3] .= $contentButton;
+                $col[4] .= $contentButton;
             }
             $col[]  = "<input type='checkbox' class='rowBarcode' value='" . $d["id_barang"] . "'>";
 

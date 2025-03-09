@@ -35,99 +35,9 @@
 
                 if (toko_id) {
                     $('#cari_barang').removeClass('d-none');
-                    $('#btn_cari_barang').removeClass('d-none');
                     $('#nama_toko').removeClass('d-block');
                     $('#nama_toko').addClass('d-none');
-                    $.ajax({
-                        url: '<?= site_url('gudang/dist_gudang_toko/getBarangGudang'); ?>',
-                        type: 'GET',
-                        data: {
-                            toko_id: toko_id
-                        },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.status) {
-                                let barangList = response.data;
-                                let htmlContent = '';
-                                // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
-                                // $('#daftarTableBarangToko thead').html(`
-                                //     <tr>
-                                //         <th>No</th>
-                                //         <th>Nama Barang</th>
-                                //         <th>Qty Barang Toko</th>
-                                //         <th>Jml Pindah Gudang</th>
-                                //         <th>Harga Jual</th>
-                                //         <th>Pilih</th>
-                                //     </tr>
-                                // `);
-                                $('#daftarTableBarangToko thead').html(`
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Barang</th>
-                                        <th>Qty Barang Gudang</th>
-                                        <th>Jml Pindah Toko</th>
-                                        <th>Pilih</th>
-                                    </tr>
-                                `);
-
-
-                                $.each(barangList, function(index, barang) {
-                                // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
-                                //     htmlContent += `
-                                // <tr>
-                                //     <td>${index + 1}</td>
-                                //     <td>${barang.nama_barang}</td>
-                                //     <td>${barang.stok_toko}</td>
-                                //     <td>
-                                //         <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
-                                //     </td>
-                                //     <td>
-                                //         <input type="number" class="form-control harga_jual" data-id="${barang.id_barang}" value="0" min="0" />
-                                //     </td>
-                                //     <td>
-                                //         <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
-                                //         <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
-
-                                //     </td>
-                                // </tr>`;
-                                    htmlContent += `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${barang.nama_barang}</td>
-                                    <td>${barang.stok_toko}</td>
-                                    <td>
-                                        <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
-                                        <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
-
-                                    </td>
-                                </tr>`;
-                                });
-
-                                $('#daftarTableBarangToko tbody').html(htmlContent);
-
-                                $('.qty_pindah').on('input', function() {
-                                    var stok_toko = parseInt($(this).closest('tr').find('td').eq(3).text());
-                                    var qty_pindah = parseInt($(this).val());
-
-                                    if (qty_pindah > stok_toko) {
-                                        alert('Jumlah yang dipilih tidak boleh lebih dari stok yang tersedia!');
-                                        $(this).val(stok_toko);
-                                    } else if (qty_pindah < 1) {
-                                        $(this).val(1);
-                                    }
-                                });
-
-                            } else {
-                                $('#daftarTableBarangToko tbody').html('<tr><td colspan="6" class="text-center">Tidak ada barang di toko ini</td></tr>');
-                            }
-                        },
-                        error: function() {
-                            alert('Terjadi kesalahan saat memuat data barang');
-                        }
-                    });
+                   loadBarangGudang(toko_id, "");
                 }
 
             } else {
@@ -135,10 +45,107 @@
             }
         });
 
-        $("#cari_barang").on("change", function() {
-            var cari_barang = $(this).val();
-            console.log(cari_barang);
-        })
+        $("#cari_barang").on('keyup', function() {
+            var keyword = $(this).val();
+            var toko_id = $('#gudang').val();
+            if(toko_id){
+                loadBarangGudang(toko_id, keyword)
+            }
+        });
+
+        function loadBarangGudang(toko_id, keyword){
+            $.ajax({
+                url: '<?= site_url('gudang/dist_gudang_toko/getBarangGudang'); ?>',
+                type: 'GET',
+                data: {
+                    toko_id: toko_id,
+                    cari_barang: keyword,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        let barangList = response.data;
+                        let htmlContent = '';
+                        // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                        // $('#daftarTableBarangToko thead').html(`
+                        //     <tr>
+                        //         <th>No</th>
+                        //         <th>Nama Barang</th>
+                        //         <th>Qty Barang Toko</th>
+                        //         <th>Jml Pindah Gudang</th>
+                        //         <th>Harga Jual</th>
+                        //         <th>Pilih</th>
+                        //     </tr>
+                        // `);
+                        $('#daftarTableBarangToko thead').html(`
+                            <tr>
+                            <th>No</th>
+                            <th>Nama Barang</th>
+                            <th>Qty Barang Gudang</th>
+                            <th>Jml Pindah Toko</th>
+                            <th>Pilih</th>
+                            </tr>
+                        `);
+
+
+                        $.each(barangList, function(index, barang) {
+                            // Di gudang opsional jangan di hapus barang kali di perlukan pada saat harga jual
+                            //     htmlContent += `
+                            // <tr>
+                            //     <td>${index + 1}</td>
+                            //     <td>${barang.nama_barang}</td>
+                            //     <td>${barang.stok_toko}</td>
+                            //     <td>
+                            //         <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
+                            //     </td>
+                            //     <td>
+                            //         <input type="number" class="form-control harga_jual" data-id="${barang.id_barang}" value="0" min="0" />
+                            //     </td>
+                            //     <td>
+                            //         <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
+                            //         <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
+
+                            //     </td>
+                            // </tr>`;
+                            htmlContent += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${barang.nama_barang}</td>
+                                <td>${barang.stok_toko}</td>
+                                <td>
+                                    <input type="number" class="form-control qty_pindah" data-id="${barang.id_barang}" value="0" min="0" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="checkbox_data" value="${barang.id_barang}" />
+                                    <input type="hidden" readonly class="form-control id_harga" name="id_harga" id="id_harga" value="${barang.id_harga}" />
+
+                                </td>
+                            </tr>`;
+                        });
+
+                        $('#daftarTableBarangToko tbody').html(htmlContent);
+
+                        $('.qty_pindah').on('input', function() {
+                                var stok_toko = parseInt($(this).closest('tr').find('td').eq(3).text());
+                                var qty_pindah = parseInt($(this).val());
+
+                            if (qty_pindah > stok_toko) {
+                                alert('Jumlah yang dipilih tidak boleh lebih dari stok yang tersedia!');
+                                $(this).val(stok_toko);
+                            } else if (qty_pindah < 1) {
+                                $(this).val(1);
+                            }
+                        });
+
+                    } else {
+                        $('#daftarTableBarangToko tbody').html('<tr><td colspan="6" class="text-center">Tidak ada barang di toko ini</td></tr>');
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat memuat data barang');
+                }
+            });
+        }
 
         // save
         $('#btn-savetlwh').on('click', function() {
