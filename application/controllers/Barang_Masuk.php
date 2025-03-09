@@ -189,31 +189,54 @@ class Barang_Masuk extends CI_Controller
 
                 if ($typeInput == 'gudangsupplier') {
                     $resultValidation = $this->validateTypeGudangSupplier();
+
                     if ($resultValidation['err_code'] == 0) {
                         $supplier = htmlspecialchars($this->input->post('supplier'));
-                        $gudangsupplierlist = htmlspecialchars($this->input->post('gudangsupplierlist'));
-                        $harga_id_barang_gudang_supplier = htmlspecialchars($this->input->post('harga_id_barang_gudang_supplier'));
-                        $tanggal_barang_masuk_gudangsupp = htmlspecialchars($this->input->post('tanggal_barang_masuk_gudangsupp'));
-                        $jml_masuk_gudangsupp = htmlspecialchars($this->input->post('jml_masuk_gudangsupp'));
-                        // $validationImage = $this->validate_bukti_file($_FILES['bukti_file_gudangsupp'], $typeInput);
+                        if ($this->session->userdata('toko_id')) {
+                            $gudangsupplierlist = htmlspecialchars($this->input->post('toko_id'));
+                        } else {
+                            $gudangsupplierlist = htmlspecialchars($this->input->post('gudangsupplierlist'));
+                        }
+                        $id_barang_masuk                    = $this->input->post('id_barang_masuk');
+                        $harga_id                           = $this->input->post('harga_id');
+                        $tanggal_barang_masuk_gudangsupp    = htmlspecialchars($this->input->post('tanggal_barang_masuk_gudangsupp'));
+                        $jml_masuk_gudangsupp               = $this->input->post('jml_masuk_gudangsupp');
+                        $validationImage                    = $this->validate_bukti_file($_FILES['bukti_file_gudangsupp'], $typeInput);
 
                         if ($validationImage['err_code'] == 0) {
-                            $data = [
-                                'supplier' => $supplier,
-                                'gudang' => $gudangsupplierlist,
-                                'harga_barang' => $harga_id_barang_gudang_supplier,
-                                'tanggal_barang' => $tanggal_barang_masuk_gudangsupp,
-                                'jml_masuk' => $jml_masuk_gudangsupp,
-                                // 'bukti_beli' => $validationImage['filename'],
-                                'bukti_beli' => '',
-                                'tipe' => $typeInput,
-                                'user_input' => $this->session->userdata('username'),
-                                'created_at' => date('Y-m-d H:i:s')
-                            ];
 
-                            $tambahData =  $this->doAddGudangSupplier($data);
-                            // $tambahData =  getReport(TYPE_REPORT_BARANG_MASUK, $data);
-                            if ($tambahData['err_code'] == 0) {
+                            $global_array_bm = [];
+                            $global_array_bt = [];
+
+                            for ($i = 0; $i < count($id_barang_masuk); $i++) {
+                                $data_barang_masuk = [
+                                    'nomor_supplier' => $supplier,
+                                    'tanggal_barang_masuk' => $tanggal_barang_masuk_gudangsupp,
+                                    'jml_masuk' => $jml_masuk_gudangsupp[$i],
+                                    'id_barang_masuk' => $id_barang_masuk[$i],
+                                    'bukti_beli' => $validationImage['filename'],
+                                    'tipe' => $typeInput,
+                                    'user_input' => $this->session->userdata('username'),
+                                    'created_at' => date('Y-m-d H:i:s')
+                                ];
+
+                                array_push($global_array_bm, $data_barang_masuk);
+
+                                $harga = $this->Harga_model->getBarangHargaById($harga_id[$i]);
+                                $stockExisting = $harga['stok_toko'];
+                                $stockInput = $jml_masuk_gudangsupp[$i];
+
+                                $sumStock = intval($stockExisting) + intval($stockInput);
+
+                                $data_update_barang_toko = [
+                                    'stok_toko' => $sumStock,
+                                    'id_harga' => $harga_id[$i]
+                                ];
+
+                                array_push($global_array_bt, $data_update_barang_toko);
+                            }
+
+                            if ($this->db->update_batch('tbl_barang_masuk', $global_array_bm, 'id_barang_masuk') && $this->db->update_batch('tbl_harga', $global_array_bt, 'id_harga')) {
                                 $this->session->set_flashdata('berhasil', 'Data Berhasil Di Tambahkan Dan Stok Berhasil Di Update');
                                 redirect('barang/masuk/tambah?toko_id=' . base64_encode($currentTokoId));
                             } else {
@@ -333,10 +356,14 @@ class Barang_Masuk extends CI_Controller
         $message = '';
 
         $this->form_validation->set_rules('supplier', 'Supplier', 'required|trim');
-        $this->form_validation->set_rules('gudangsupplierlist', 'Gudang', 'required|trim');
-        $this->form_validation->set_rules('harga_id_barang_gudang_supplier', 'Barang Gudang', 'required|trim');
+        if ($this->session->userdata('toko_id')) {
+            $this->form_validation->set_rules('toko_id', 'Gudang', 'required|trim');
+        } else {
+            $this->form_validation->set_rules('gudangsupplierlist', 'Gudang', 'required|trim');
+        }
+        $this->form_validation->set_rules('id_barang_masuk[]', 'Barang Gudang', 'required|trim');
         $this->form_validation->set_rules('tanggal_barang_masuk_gudangsupp', 'Tanggal Barang', 'required|trim');
-        $this->form_validation->set_rules('jml_masuk_gudangsupp', 'Jumlah Barang', 'required|trim');
+        $this->form_validation->set_rules('jml_masuk_gudangsupp[]', 'Jumlah Barang', 'required|trim');
 
 
         if ($this->form_validation->run() == FALSE) {
@@ -412,61 +439,61 @@ class Barang_Masuk extends CI_Controller
         $fileName = '';
         
         // Bisa di aktifkan
-        // if (empty($file['name'])) {
-        //     $err_code++;
-        //     $message = "Bukti harus diisi";
-        // } else {
-        //     $this->load->library('encryption');
-        //     $key = bin2hex(random_bytes(32));
-        //     $encrypted_name = $this->encryption->encrypt($file['name']);
+        if (empty($file['name'])) {
+            $err_code++;
+            $message = "Bukti harus diisi";
+        } else {
+            $this->load->library('encryption');
+            $key = bin2hex(random_bytes(32));
+            $encrypted_name = $this->encryption->encrypt($file['name']);
 
 
-        //     // $config['file_name']            = $file['name'];
-        //     $config['upload_path']          = './assets/file_barang_masuk';
-        //     $config['allowed_types']        = 'pdf|gif|jpg|jpeg|png|JPEG|JPG|PNG';
-        //     $config['max_size']             = 2048;
-        //     $config['remove_spaces'] = TRUE;
-        //     $config['encrypt_name'] = TRUE;
+            // $config['file_name']            = $file['name'];
+            $config['upload_path']          = './assets/file_barang_masuk';
+            $config['allowed_types']        = 'pdf|gif|jpg|jpeg|png|JPEG|JPG|PNG';
+            $config['max_size']             = 2048;
+            $config['remove_spaces'] = TRUE;
+            $config['encrypt_name'] = TRUE;
 
-        //     $this->load->library('upload');
-        //     $this->upload->initialize($config);
+            $this->load->library('upload');
+            $this->upload->initialize($config);
 
-        //     if ($tipe == 'antar_toko') {
-        //         if (!$this->upload->do_upload('bukti_file')) {
-        //             $err_code++;
-        //             $message = "Gagal upload file: " . $this->upload->display_errors();
-        //         } else {
+            if ($tipe == 'antar_toko') {
+                if (!$this->upload->do_upload('bukti_file')) {
+                    $err_code++;
+                    $message = "Gagal upload file: " . $this->upload->display_errors();
+                } else {
 
-        //             $upload_data = $this->upload->data();
-        //             $fileName = $upload_data['file_name'];
-        //             $file_path = $config['upload_path'] . $upload_data['file_name'];
-        //         }
-        //     }
+                    $upload_data = $this->upload->data();
+                    $fileName = $upload_data['file_name'];
+                    $file_path = $config['upload_path'] . $upload_data['file_name'];
+                }
+            }
 
-        //     if ($tipe == 'gudangsupplier') {
-        //         if (!$this->upload->do_upload('bukti_file_gudangsupp')) {
-        //             $err_code++;
-        //             $message = "Gagal upload file: " . $this->upload->display_errors();
-        //         } else {
+            if ($tipe == 'gudangsupplier') {
+                if (!$this->upload->do_upload('bukti_file_gudangsupp')) {
+                    $err_code++;
+                    $message = "Gagal upload file: " . $this->upload->display_errors();
+                } else {
 
-        //             $upload_data = $this->upload->data();
-        //             $fileName = $upload_data['file_name'];
-        //             $file_path = $config['upload_path'] . $upload_data['file_name'];
-        //         }
-        //     }
+                    $upload_data = $this->upload->data();
+                    $fileName = $upload_data['file_name'];
+                    $file_path = $config['upload_path'] . $upload_data['file_name'];
+                }
+            }
 
-        //     if ($tipe == 'toko_luar') {
-        //         if (!$this->upload->do_upload('bukti_file_tokoluar')) {
-        //             $err_code++;
-        //             $message = "Gagal upload file: " . $this->upload->display_errors();
-        //         } else {
+            if ($tipe == 'toko_luar') {
+                if (!$this->upload->do_upload('bukti_file_tokoluar')) {
+                    $err_code++;
+                    $message = "Gagal upload file: " . $this->upload->display_errors();
+                } else {
 
-        //             $upload_data = $this->upload->data();
-        //             $fileName = $upload_data['file_name'];
-        //             $file_path = $config['upload_path'] . $upload_data['file_name'];
-        //         }
-        //     }
-        // }
+                    $upload_data = $this->upload->data();
+                    $fileName = $upload_data['file_name'];
+                    $file_path = $config['upload_path'] . $upload_data['file_name'];
+                }
+            }
+        }
         
         // Optional jika tidak di gunakan bisa di commant
         if($fileName){
@@ -546,6 +573,38 @@ class Barang_Masuk extends CI_Controller
         $currentTokoId = $this->input->post('toko_id');
         $result = $this->Harga_model->ambilBarangBerdasarkanToko($currentTokoId);
         echo json_encode($result);
+    }
+
+    public function getDataBarangAjax()
+    {
+        $data_post["harga_id"]   = htmlspecialchars($this->input->post('id_harga'));
+        $id_toko                 = htmlspecialchars($this->input->post('id_toko'));
+
+        if ($this->Barang_masuk_model->insert_data($data_post)) {
+
+            $data_json["status"] = "berhasil";
+            $this->session->set_flashdata('message', 'Data berhasil di tambahkan');
+        } else {
+
+            $data_json["status"] = "gagal";
+            $this->session->set_flashdata('message_error', 'Penambahan Data Tidak eligible');
+        }
+
+        $data_json["data_sementara"] = $this->Barang_masuk_model->getBarangMasukSementara($id_toko);
+
+        echo json_encode($data_json);
+    }
+
+    public function hapusDataBarangAjax()
+    {
+        $id_barang_masuk = $this->input->post('id_barang_masuk');
+        $id_toko         = $this->input->post('id_toko');
+
+        $this->Barang_masuk_model->hapus_data($id_barang_masuk);
+        $data_json["data_sementara"] = $this->Barang_masuk_model->getBarangMasukSementara($id_toko);
+
+        echo json_encode($data_json);
+        
     }
 
 

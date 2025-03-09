@@ -119,6 +119,7 @@ class Warehouse extends CI_Controller
             }
             $col[]  = $d['berat_barang'] . " " . $d['satuan'];
             $col[]  = ($d["barcode_barang"] == null) ? "<a class='btn btn-info btn-sm' href='" . base_url('barang/create_barcode/') . $d['kode_barang'] . "'>Create Barcode</a>" : "<img src='" . base_url('assets/barcodes/') . $d['barcode_barang'] . '.png' . "' alt='' srcset=''>";
+            $col[]  = "<a href='" . base_url("gudang/barang_toko/ubah/") . base64_encode($d['id_harga']) . "?toko=$enkripsi_toko_id" . "' class='btn btn-sm btn-warning'><i class='bx bx-edit-alt me-1'></i>&nbsp; Edit</a>";
 
 
             array_push($row, $col);
@@ -133,6 +134,84 @@ class Warehouse extends CI_Controller
         ];
 
         echo json_encode($data_json);
+    }
+
+    public function ubah($id)
+    {
+        $this->form_validation->set_rules(
+            'nama_barang',
+            'Nama Barang',
+            'required|max_length[100]'
+        );
+        $this->form_validation->set_rules(
+            'barang_id',
+            'Barang',
+            'required|max_length[100]'
+        );
+        $this->form_validation->set_rules(
+            'toko_id',
+            'Toko',
+            'required|max_length[100]'
+        );
+        $this->form_validation->set_rules(
+            'stok_toko',
+            'Stok',
+            'required|max_length[100]'
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+
+            $data['title_menu'] = "Gudang";
+            $data['title']      = "Gudang";
+            $data['toko']       = $this->toko->ambilSemuaToko();
+
+            $data['decode_harga_id'] = base64_decode($id);
+
+            $getHarga = $this->harga->getTableHargaId($data['decode_harga_id']);
+            if ($getHarga) {
+                $getBarang      = $this->barang->getFindById($getHarga['barang_id']);
+                $data['harga']  = $getHarga;
+                $data['barang'] = $getBarang;
+            }
+            if (!$this->input->get('toko')) {
+                $this->session->set_flashdata('message_error', 'Maaf Kamu Belum Memilih Toko');
+                redirect('gudang/index');
+            } else {
+                $id_toko            = $this->input->get('toko');
+                $decrypt_id         = $this->secure->decrypt_url($id_toko);
+                $data['toko_id']    = $decrypt_id;
+            }
+            $this->load->view('layout/header', $data);
+            $this->load->view('layout/sidebar', $data);
+            $this->load->view('layout/navbar', $data);
+            $this->load->view('warehouse/warehouse_barang_toko/ubah_warehouse', $data);
+            $this->load->view('layout/footer', $data);
+            $this->load->view('layout/script', $data);
+        } else {
+            $data = [
+                'nama_barang'   => htmlspecialchars($this->input->post('nama_barang')),
+                'id_harga'      => htmlspecialchars($this->input->post('id_harga')),
+                'barang_id'     => htmlspecialchars($this->input->post('barang_id')),
+                'toko_id'       => htmlspecialchars($this->input->post('toko_id')),
+                'stok_toko'     => htmlspecialchars($this->input->post('stok_toko')),
+            ];
+
+            $resultUpdate = $this->harga->updateHargaToko($data);
+
+            if ($resultUpdate == true) {
+                $this->session->set_flashdata('message', 'Data berhasil diubah');
+                $toko_id_encrypt = htmlspecialchars($this->input->post("toko_id"));
+                $encrypt_id_toko = $this->secure->encrypt_url($toko_id_encrypt);
+                ($this->session->userdata("toko_id")) ? redirect('gudang/index') : "";
+                redirect('gudang/index?toko=' . $encrypt_id_toko);
+            } else {
+                $this->session->set_flashdata('message_error', 'Maaf Data Gagal Ditambahkan');
+                $toko_id_encrypt = htmlspecialchars($this->input->post("toko_id"));
+                $encrypt_id_toko = $this->secure->encrypt_url($toko_id_encrypt);
+                ($this->session->userdata("toko_id")) ? redirect('gudang/index') : "";
+                redirect('gudang/index?toko=' . $encrypt_id_toko);
+            }
+        }
     }
 
     public function cetak_excel()

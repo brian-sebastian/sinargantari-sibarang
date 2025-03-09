@@ -227,6 +227,8 @@ $route['barang/masuk/tambah']                   = "Barang_Masuk/tambah";
 $route['barang/masuk/barang/harga/(:any)']      = "Barang_Masuk/json_barang_by_toko/$1";
 $route['barang/masuk/hapus/(:any)']             = "Barang_Masuk/hapus/$1";
 $route['barang/masuk/getDataBarangHargaAjax']   = "Barang_Masuk/getDataBarangHargaAjax";
+$route['barang/masuk/getDataBarangAjax']   		= "Barang_Masuk/getDataBarangAjax";
+$route['barang/masuk/hapusDataBarangAjax']   	= "Barang_Masuk/hapusDataBarangAjax";
 
 
 $route['toko/supplier']                         = "Supplier/index";
@@ -350,6 +352,7 @@ $route["driver/downloadDriver120"] = "utility_driver/downloadDriver120";
 $route["gudang/index"] = "warehouse/index";
 $route["gudang/barang_toko/ajax"]                   = "warehouse/ajaxBarangToko";
 $route["gudang/barang_toko/excel"]                  = "warehouse/cetak_excel";
+$route["gudang/barang_toko/ubah/(:any)"]            = "warehouse/ubah/$1";
 
 $route["gudang/toko_gudang"]                  = "shop_warehouse/index";
 $route["gudang/toko_gudang/getBarangToko"]                  = "shop_warehouse/getBarangToko";

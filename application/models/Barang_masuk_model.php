@@ -264,4 +264,22 @@ class Barang_masuk_model extends CI_Model
             return true;
         }
     }
+
+    public function insert_data($data)
+    {
+        $this->db->insert('tbl_barang_masuk', $data);
+        return $this->db->affected_rows();
+    }
+
+    public function getBarangMasukSementara($id_toko)
+    {
+        $this->db->select('tbl_barang_masuk.id_barang_masuk, tbl_barang.nama_barang, tbl_barang_masuk.harga_id');
+        $this->db->from('tbl_barang_masuk');
+        $this->db->join('tbl_harga', 'tbl_barang_masuk.harga_id=tbl_harga.id_harga', 'left');
+        $this->db->join('tbl_barang', 'tbl_harga.barang_id=tbl_barang.id_barang', 'left');
+        $this->db->where('tbl_harga.toko_id', $id_toko);
+        $this->db->where('tbl_barang_masuk.jml_masuk', null);
+
+        return $this->db->get()->result_array();
+    }
 }

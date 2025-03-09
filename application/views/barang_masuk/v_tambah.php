@@ -130,6 +130,22 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="basic-default-name">Tanggal Pembelian</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control flatpickr" type="text" name="tanggal_barang_masuk_gudangsupp" id="tanggal_barang_masuk_gudangsupp">
+                                    <?= form_error('tanggal_barang_masuk_gudangsupp', '<small class="text-danger">', '</small>') ?>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="basic-default-phone">Bukti Masuk</label>
+                                <div class="col-sm-10">
+                                    <input type="file" name="bukti_file_gudangsupp" class="form-control dropify" data-max-file-size="2M" data-allowed-file-extensions="pdf png jpg jpeg" />
+                                    <?= form_error('bukti_file_gudangsupp', '<small class="text-danger">', '</small>') ?>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="basic-default-name">Barang Gudang Supplier</label>
                                 <div class="col-sm-10">
                                     <select class="form-control select2 " name="harga_id_barang_gudang_supplier" id="harga_id_barang_gudang_supplier" style="width: 100%;">
@@ -145,27 +161,19 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="basic-default-name">Tanggal Pembelian</label>
-                                <div class="col-sm-3">
-                                    <input class="form-control flatpickr" type="text" name="tanggal_barang_masuk_gudangsupp" id="tanggal_barang_masuk_gudangsupp">
-                                    <?= form_error('tanggal_barang_masuk_gudangsupp', '<small class="text-danger">', '</small>') ?>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="jml_masuk_gudangsupp">Jumlah Barang</label>
-                                <div class="col-sm-3">
-                                    <div class="input-group input-group-merge">
-                                        <input type="number" name="jml_masuk_gudangsupp" id="jml_masuk_gudangsupp" class="form-control" />
-                                        <?= form_error('jml_masuk_gudangsupp', '<small class="text-danger">', '</small>') ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="basic-default-phone">Bukti Masuk</label>
-                                <div class="col-sm-10">
-                                    <input type="file" name="bukti_file_gudangsupp" class="form-control dropify" data-max-file-size="2M" data-allowed-file-extensions="pdf png jpg jpeg" />
-                                    <?= form_error('bukti_file_gudangsupp', '<small class="text-danger">', '</small>') ?>
+                                <div class="table-responsive text-nowrap py-2 px-2">
+                                    <table class="table table-bordered" id="daftarTableBarangSementara">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Barang</th>
+                                                <th>Jumlah Barang</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -231,7 +239,7 @@
                         </div>
 
                         <div class="row justify-content-end" id="action-button-todo" style="display: none;">
-                            <div class="col-sm-10">
+                            <div class="col-sm-2">
                                 <button type="button" onclick="batal()" class="btn btn-secondary btn-sm">Batal</button>
                                 <button type="submit" class="btn btn-primary btn-sm">Tambah</button>
                             </div>
@@ -246,6 +254,47 @@
 
 <script>
     $(document).ready(function() {
+
+        $('#harga_id_barang_gudang_supplier').on('change', function() {
+            let selectedBarang = $(this).val();
+            let toko_id = $('#gudangsupplierlist').val();
+            console.log(toko_id);
+
+            let BASE_URL_HARGAIDGUDANG = '<?= base_url() ?>'
+
+            $.ajax({
+                url: BASE_URL_HARGAIDGUDANG + 'barang/masuk/getDataBarangAjax',
+                type: 'POST',
+                data: {
+                    id_harga: selectedBarang,
+                    id_toko: toko_id
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'berhasil') {
+                        let barangList = response.data_sementara;
+                        let htmlContent = '';
+
+                        $.each(barangList, function(index, barang) {
+                            htmlContent += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${barang.nama_barang}</td>
+                                <td>
+                                    <input type="number" class="form-control" name="jml_masuk_gudangsupp[]" id="jml_masuk_gudangsupp" data-id="${barang.id_barang_masuk}" value="0" min="0" />
+                                    <input type="hidden" readonly class="form-control id_barang_masuk" name="id_barang_masuk[]" id="id_barang_masuk" value="${barang.id_barang_masuk}" />
+                                    <input type="hidden" readonly class="form-control harga_id" name="harga_id[]" id="harga_id" value="${barang.harga_id}" />
+                                </td>
+                                <td>
+                                    <a class='btn btn-danger btn-sm text-white' onclick='delete_barang(${barang.id_barang_masuk})'><i class='bx bx-trash me-1'></i> Delete</a>
+                                </td>
+                            </tr>`;
+                        });
+                        $('#daftarTableBarangSementara tbody').html(htmlContent);
+                    }
+                }
+            });
+        });
 
         $("input[name='tipe']").change(function() {
             let toko_id = $('#toko_id').val();
@@ -306,8 +355,7 @@
                 // });
                 $.each(allToko, function(index, toko) {
                     if(idTk == toko.id_toko){
-
-                        let option = $('<option>').val(toko.id_toko).text(toko.nama_toko).prop('selected', true);
+                        let option = $('<option>').val(idTk).text(toko.nama_toko).prop('selected', true);
                         $('#gudangsupplierlist').append(option);
                     }else{
                         let option = $('<option>').val(toko.id_toko).text(toko.nama_toko);
@@ -381,10 +429,45 @@
             }
 
         })
-
-
-
     })
+
+    function delete_barang(id) {
+
+        let toko_id = $('#gudangsupplierlist').val();
+
+        let BASE_URL_HARGAIDGUDANG = '<?= base_url() ?>';
+
+        $.ajax({
+            url: BASE_URL_HARGAIDGUDANG + 'barang/masuk/hapusDataBarangAjax',
+            type: 'POST',
+            data: {
+                id_barang_masuk: id,
+                id_toko: toko_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                let barangList = response.data_sementara;
+                let htmlContent = '';
+
+                $.each(barangList, function(index, barang) {
+                    htmlContent += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${barang.nama_barang}</td>
+                        <td>
+                            <input type="number" class="form-control" name="jml_masuk_gudangsupp[]" id="jml_masuk_gudangsupp" data-id="${barang.id_barang_masuk}" value="0" min="0" />
+                            <input type="hidden" readonly class="form-control id_barang_masuk" name="id_barang_masuk[]" id="id_barang_masuk" value="${barang.id_barang_masuk}" />
+                            <input type="hidden" readonly class="form-control harga_id" name="harga_id[]" id="harga_id" value="${barang.harga_id}" />
+                        </td>
+                        <td>
+                            <a class='btn btn-danger btn-sm text-white' onclick='delete_barang(${barang.id_barang_masuk})'><i class='bx bx-trash me-1'></i> Delete</a>
+                        </td>
+                    </tr>`;
+                });
+                $('#daftarTableBarangSementara tbody').html(htmlContent);
+            }
+        });
+    }
 
     function isNumber(event) {
         var keyCode = event.which ? event.which : event.keyCode;
