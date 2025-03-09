@@ -113,22 +113,15 @@ class Warehouse_to_shop extends CI_Controller
         $barang_data = $this->input->post('barang_data');
         $valid = true;
         $message = '';
-    //    var_dump($barang_data);
-    //    die;
 
         if (!empty($barang_data)) {
             foreach ($barang_data as $barang) {
 
                 $this->db->trans_start();
-                // var_dump($toko_id);
-                // var_dump($barang['id_barang']);
                 $this->db->where('toko_id', $toko_id);
                 $this->db->where('barang_id', $barang['id_barang']);
                 $existing = $this->db->get('tbl_harga')->row();
-                //    var_dump($existing);
-                //    die;
-                // var_dump($barang['qty_pindah']);
-                // die;
+
                 if ($existing) {
                     // Kurangi stok gudang
                     $this->db->set('stok_toko', 'stok_toko - ' . (int)$barang['qty_pindah'], false);
